@@ -1,91 +1,134 @@
-# If else
-print('IF ELSE')
-text = 'cd'
+# # If else
+# print('IF ELSE')
+# text = 'cd'
 
-if text == 'Hello':
-        print('Bot: Hello!')
-elif text == 'Bye':
-        print('Bot: Goodbye!')
-else:
-        print('I did not understand' )
+# if text == 'Hello':
+#         print('Bot: Hello!')
+# elif text == 'Bye':
+#         print('Bot: Goodbye!')
+# else:
+#         print('I did not understand' )
 
-print('Succes') if 3 > 2 else print('failure')
-print()
+# print('Succes') if 3 > 2 else print('failure')
+# print()
 
-# For loop
-print('FOR LOOP')
-people: list[str] =['Mario', 'Luigi', 'Peach', 'Toad'] 
+# # For loop
+# print('FOR LOOP')
+# people: list[str] =['Mario', 'Luigi', 'Peach', 'Toad'] 
 
-for person in people:
-        print(f'Hello, {person}')
+# for person in people:
+#         print(f'Hello, {person}')
 
-for number in range(10):
-        print(number)
+# for number in range(10):
+#         print(number)
 
-print()
+# print()
 
-# While Loop
-print('WHILE LOOP')
+# # While Loop
+# print('WHILE LOOP')
 
-a = 0
-while a < 10:
-        print(a)
-        a += 1
+# a = 0
+# while a < 10:
+#         print(a)
+#         a += 1
 
-print()
+# print()
 
-# Break & continue
-print('BREAK & CONTINUE')
+# # Break & continue
+# print('BREAK & CONTINUE')
 
-for i in range(10):
-        print(i)
-        if i == 5:
-                break
+# for i in range(10):
+#         print(i)
+#         if i == 5:
+#                 break
 
-i = 0
-while i<3:
-        print(i)
-        if i== 1:
-                break
+# i = 0
+# while i<3:
+#         print(i)
+#         if i== 1:
+#                 break
 
-        i += 1
+#         i += 1
 
-for i in range(5):
-        if i == 3:
-                continue
+# for i in range(5):
+#         if i == 3:
+#                 continue
 
-        print(i)
+#         print(i)
 
-print()
+# print()
 
-# Pass 
-print('PASS')
+# # Pass 
+# print('PASS')
 
-x , y = 10, 20
-if x > y:
-        pass
+# x , y = 10, 20
+# if x > y:
+#         pass
 
-print()
+# print()
 
-# Loop Else
-print('LOOP ELSE')
+# # Loop Else
+# print('LOOP ELSE')
 
-for i in range(5):
-        print(i, end=' ')
+# for i in range(5):
+#         print(i, end=' ')
 
-        if i == 2:
-                break
-else:
-        print('Succes')
+#         if i == 2:
+#                 break
+# else:
+#         print('Succes')
 
-print()
+# print()
 
-t = 0
-while t < 3:
-        print(t, end=' ')
-        t+=1
+# t = 0
+# while t < 3:
+#         print(t, end=' ')
+#         t+=1
 
-        if t == 2:
-                break
-else:
-        print('Succes')
+#         if t == 2:
+#                 break
+# else:
+#         print('Succes')
+
+
+
+# # # # # # # SECTION 5 FUNCTIONS # # # # # # # 
+# def greet(name: str, greeting: str = 'Welcome', age: int = 0):
+#         print(f'{greeting} {name}, {age}')
+# greet('Juan', age=18)
+
+# def do_something():
+#         for i in range(3):
+#                 print('Doing something')
+#         print('Done')
+# do_something()
+
+# def sum_numbers(a : int, b : int) -> int:
+#         return a + b
+
+# print(type(sum_numbers(10,20)))
+
+# def do_something(n:int):
+#         print(n)
+#         if n==1:
+#                 print('Done')
+#                 return
+        
+#         do_something(n - 1)
+
+# do_something(3)
+
+# def greet_people(*people: str, age):
+#         print(people)
+#         for name in people:
+#                 print(f'Hello, {name}, {age}')
+
+# greet_people('Mario', 'Luigi', 'Toad', age=10)
+
+# def do_something(*args, **kwargs):
+#         print(args)
+#         print(kwargs)
+
+#         print(kwargs['name'])
+
+# do_something('Hello', name = 'Mario', age = 10)
