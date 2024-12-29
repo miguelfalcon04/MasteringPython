@@ -132,3 +132,58 @@
 #         print(kwargs['name'])
 
 # do_something('Hello', name = 'Mario', age = 10)
+
+# # # # # # # SECTION 6 ERROR HANDLING # # # # # # # 
+
+# USER INPUT
+# a = input('A: ')
+# b = input('B: ')
+# print(f'Sum: {int(a)+int(b)}')
+
+# TRY...EXCEPT
+# def do_math():
+#     user_input = input('Enter a number: ')
+
+#     try:
+#         number = float(user_input)
+#         # result = number / 0
+#         print(number)
+#     except ValueError:
+#         print('Enter a valid number')
+#         do_math()
+#     # except ZeroDivisionError:
+#     #     print('Please do not divide by 0')
+#     except Exception as e:
+#         print('Something went wrong', e)
+
+# do_math()
+
+# ELSE...FINALLY
+# user_input: str = input('You: ')
+
+# try:
+#     number = float(user_input)
+#     print(number)
+# except Exception as e:
+#     print('Exception:', e)
+# else:
+#     print('Succes')
+# finally:
+#     print('This will always run')
+
+# RAISE
+# user_input: str = input('You: ')
+# if user_input == '0':
+#     raise Exception('Please never use 0')
+
+# is_connected: bool = False
+# def connect_to_internet():
+#     if not is_connected:
+#         raise Exception('No Internet')
+#     else:
+#         print('Connected to internet')
+
+# try:
+#     connect_to_internet()
+# except Exception as e:
+#     print(e)
