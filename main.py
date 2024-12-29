@@ -205,4 +205,96 @@
 
 # INSTALLING EXTERNAL PACKAGES
 # pip install requests
-import requests
+# import requests
+
+# # # # # # # SECTION 8 Python Basics 2 # # # # # # # 
+# file = open('sample.text')
+# text = file.read()
+# file.close()
+# print(text)
+
+# with open('sample.text') as file:
+#     text = file.read()
+#     print(text)
+
+# import sample_module
+
+# def hello():
+#     print('hello')
+#     sample_module.do_something()
+
+# sample_module.do_something()
+
+# ENUMS
+# from enum import Enum
+
+# class State(Enum):
+#     OFF = 0
+#     ON = 1
+
+# state = State.ON
+# if state == State.ON:
+#     print('The lamp is turned on')
+# elif state == State.OFF:
+#     print('The lamp is turned off')
+
+
+# class Color(Enum):
+#     RED = 'Red'
+#     BLUE = 'Blue'
+#     GREEN = 'Green'
+
+# c = Color.RED
+
+# def check_color(color: Color):
+#     if color == Color.RED:
+#         print(color.value)
+#     elif color == Color.GREEN:
+#         print(color.name)
+#     elif color == Color.BLUE:
+#         print(color)
+
+# check_color(c)
+
+# COMPARING FLOATS
+# a = 0.3
+# b = 0.1 + 0.2
+# print(a == b)
+
+# def compare_float(a: float, b: float, tol: float) -> bool:
+#     absolute = abs(a-b)
+#     print(f'{a} - {b} = {a - b}')
+#     return absolute < tol
+
+# first = 0.8
+# second = 0.1 + 0.7
+# print(compare_float(first, second, tol=1e-10))
+
+# if __name__ == '__main__':
+# import sample_module
+# print('Running code')
+
+# NONLOCAL & GLOBAL
+
+# x = 10
+
+# def fun():
+#     global x
+#     x = 20
+#     print('Inner: ', x)
+
+# fun()
+# print('Outer: ',x)
+
+# def fun():
+#     x = 20
+
+#     def inner_fun():
+#         nonlocal x
+#         x = 10
+#         print('Inner: ', x)
+
+#     inner_fun()
+#     print('Outer: ', x)
+
+# fun()
