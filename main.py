@@ -187,3 +187,22 @@
 #     connect_to_internet()
 # except Exception as e:
 #     print(e)
+
+# # # # # # # SECTION 7 Packages & Modules # # # # # # # 
+
+# IMPORTING MODULES
+# import random
+# print(random.randint(0,100))
+
+# from sample_module import hello
+# hello()
+
+# IMPORTING PACKAGES
+# from sample_package import sample_module, sample_module2
+
+# sample_module.hello()
+# sample_module2.hello2()
+
+# INSTALLING EXTERNAL PACKAGES
+# pip install requests
+import requests
