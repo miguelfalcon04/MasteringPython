@@ -323,18 +323,44 @@
 # print(numbers[:10])
 
 # MODIFYING LISTS IN A LOOP
-people: list[str] = ['Mario', 'Luigi', 'Peach', 'Toads']
-people2: list[str] = []
+# people: list[str] = ['Mario', 'Luigi', 'Peach', 'Toads']
+# people2: list[str] = []
 
-for person in people:
-    print(person, ' -> ', people2)
+# for person in people:
+#     print(person, ' -> ', people2)
 
-    if person == 'Luigi':
-        pass
-    else:
-        people2.append(person)
+#     if person == 'Luigi':
+#         pass
+#     else:
+#         people2.append(person)
 
-    if person == 'Peach':
-        print('Hi I am Peach')
+#     if person == 'Peach':
+#         print('Hi I am Peach')
 
-print(people2)
+# print(people2)
+
+# # # # # # # SECTION 10 OOP # # # # # # # 
+
+# CLASSES & OBJECTS
+class Lamp:
+    def __init__(self, model: str, color: str):
+        self.model = model
+        self.color = color
+    
+    def turn_on(self):
+        print(self.model, 'is turned on')
+    
+    def turn_off(self):
+        print(self.model, 'is turned off')
+    
+    def describe(self):
+        print(f'Lamp: {self.model} ({self.color})')
+        
+red_lamp: Lamp = Lamp('SmallLamp', 'Red')
+red_lamp.turn_on()
+red_lamp.turn_off()
+red_lamp.color = 'Blue'
+red_lamp.describe()
+
+green_lamp: Lamp = Lamp('BigLamp', 'Green')
+green_lamp.turn_on()
