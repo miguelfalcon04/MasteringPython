@@ -386,22 +386,243 @@
 
 # GETTERS & SETTERS
 
-class Fruit:
-    def __init__(self, name: str):
-        self._name = name
+# class Fruit:
+#     def __init__(self, name: str):
+#         self._name = name
     
-    @property
-    def name(self):
-        print(f'{self._name} is being accesed')
-        return self._name
+#     @property
+#     def name(self):
+#         print(f'{self._name} is being accesed')
+#         return self._name
     
-    @name.setter
-    def name(self, value: str):
-        print(f'{self._name} is now: {value}')
-        self._name = value
+#     @name.setter
+#     def name(self, value: str):
+#         print(f'{self._name} is now: {value}')
+#         self._name = value
 
-if __name__ == '__main__':
-    apple: Fruit = Fruit('Apple')
-    apple.name
-    apple.name = 'Banana'
-    print(apple.name)
+# if __name__ == '__main__':
+#     apple: Fruit = Fruit('Apple')
+#     apple.name
+#     apple.name = 'Banana'
+#     print(apple.name)
+
+# __INIT__() __STR__() __REPR__() __EQ__()
+# class Car:
+#     def __init__(self, model: str, color: str):
+#         self.model = model
+#         self.color = color
+    
+#     def drive(self):
+#         print(f'{self.model} is now driving')
+    
+#     def explode(self):
+#         print(f'{self.name}, exploded')
+#     def __str__(self):
+#         return f'{self.model} ({self.color})'
+    
+#     def __repr__(self):
+#         return f'Car(model={self.model}, color={self.color})'
+    
+#     def __eq__(self, value):
+#         return self.__dict__ == value.__dict__
+
+
+# if __name__ == '__main__':
+#     car: Car = Car('BMW', 'Blue')
+#     car2: Car = Car('BMW', 'Blue')
+#     car.drive()
+#     print(car)
+#     print(car.__repr__())
+#     print(car == car2)
+    
+#     def hello():
+#         print('Hello')
+
+# PRIVATE & PROTECTED
+# class Lamp:
+#     def __init__(self, name: str, model: int, version: int):
+#         self.name = name
+#         self.__model = model
+#         self._version = version
+    
+#     def description(self):
+#         self.__self_maintenance()
+#         print(self.name, self.__model)
+    
+#     def __self_maintenance(self):
+#         print(self.name,'is fixing itself')
+
+# class ElectricLamp(Lamp):
+#     def __init__(self, name: str, model: int, version: int):
+#         super().__init__(name, model, version)
+    
+#     def do_something(self):
+#         print(self._version)
+
+# lamp: Lamp = Lamp('Lamp', 1010, 12345)
+# lamp.description()
+
+# electric_lamp: ElectricLamp = ElectricLamp('El lamp', 1010, 1234)
+# electric_lamp.do_something()
+
+# INHERITANCE
+# class Animal:
+#     def __init__(self, name: str,):
+#         self.name = name
+    
+#     def eat(self):
+#         print(f'{self.name} is eating')
+    
+#     def sleep(self):
+#         print(f'{self.name} is sleeping')
+
+# class Cat(Animal):
+#     def __init__(self, name: str, weight: float):
+#         super().__init__(name)
+#         self.weight = weight
+    
+#     def meow(self):
+#         print(f'{self.name} says meow')
+
+# cat: Cat = Cat('Garflied', 100)
+# cat.meow()
+# cat.sleep()
+
+# SUPER
+# class Lamp:
+#     def __init__(self, model: str):
+#         self.model = model
+    
+#     def turn_on(self):
+#         print(self.model, 'is turned on')
+    
+#     def turn_off(self):
+#         print(self.model, 'is turned off')
+
+# class ElectricLamp(Lamp):
+#     def __init__(self, model):
+#         super().__init__(model)
+    
+#     def turn_on(self):
+#         print('Using electricity')
+#         super().turn_on()
+
+# el_lamp = ElectricLamp = ElectricLamp('Bicho')
+# el_lamp.turn_on()
+
+# @CLASSMETHOD @STATICMETHOD
+# class Calculator:
+#     def __init__(self, name: str):
+#         self.name = name
+    
+#     def description(self):
+#         print(f'{self.name} is a calcultor')
+    
+#     @staticmethod
+#     def add_numbers(a: float, b: float):
+#         print(a+b)
+    
+#     @classmethod
+#     def create_with_version(cls, name: str, version: int):
+#         return cls(f'{name}: ({version})')
+
+# calc: Calculator = Calculator.create_with_version('Pepe', 2)
+# calc.description()
+# calc.add_numbers(1,2)
+# Calculator.add_numbers(10,20)
+
+# @ABSTRACTMETHOD
+# from abc import ABC, abstractmethod
+
+# class Phone(ABC):
+#     def __init__(self, model: str):
+#         self.model = model
+    
+#     @property
+#     @abstractmethod
+#     def power(self):
+#         ...
+    
+#     @abstractmethod
+#     def call_target(self, person: str):
+#         ...
+
+# class iBanana(Phone):
+#     def __init__(self, model: str):
+#         super().__init__(model)
+    
+#     @property
+#     def power(self):
+#         raise NotImplementedError('Code Missing...')
+    
+#     def call_target(self, person: str):
+#         pass
+
+
+# phone = iBanana('iBanana')
+# phone.power()
+
+# PROTOCOLS
+# from typing import Protocol
+
+# class Printable(Protocol):
+#     pages: int
+    
+#     def print(self):
+#         pass
+    
+#     def recycle(self):
+#         pass
+
+# class Book:
+#     pages: int
+    
+#     def __init__(self, title: str):
+#         self.title = title
+    
+#     def print(self):
+#         print('Printing book:', self.title)
+    
+#     def recycle(self):
+#         print('Recycling book:', self.title)
+
+# class Magazine:
+#     pages: int
+    
+#     def __init__(self, title: str):
+#         self.title = title
+    
+#     def print(self):
+#         print('Printing magazine:', self.title)
+    
+#     def recycle(self):
+#         print('Recycling magazine:', self.title)
+
+# def print_item(printable: Printable):
+#     printable.print()
+
+# book: Printable = Book('Python')
+# print_item(book)
+
+# magazine: Printable = Magazine('Deluxe')
+# print_item(magazine)
+
+# __INIT__ VS __NEW__
+class Connection:
+    __instance = None
+    
+    def __new__(cls, *args, **kwargs):
+        if cls.__instance is None:
+            print('Connecting...')
+            cls.__instance = super().__new__(cls)
+            return cls.__instance
+        else:
+            print('WARNING: There is already a connection')
+            return cls.__instance
+    
+    def __init__(self):
+        print('Connected to Internet')
+
+connection = Connection()
+connection2 = Connection()
+print(connection == connection2)
