@@ -342,25 +342,66 @@
 # # # # # # # SECTION 10 OOP # # # # # # # 
 
 # CLASSES & OBJECTS
-class Lamp:
-    def __init__(self, model: str, color: str):
-        self.model = model
-        self.color = color
+# class Lamp:
+#     def __init__(self, model: str, color: str):
+#         self.model = model
+#         self.color = color
     
-    def turn_on(self):
-        print(self.model, 'is turned on')
+#     def turn_on(self):
+#         print(self.model, 'is turned on')
     
-    def turn_off(self):
-        print(self.model, 'is turned off')
+#     def turn_off(self):
+#         print(self.model, 'is turned off')
     
-    def describe(self):
-        print(f'Lamp: {self.model} ({self.color})')
+#     def describe(self):
+#         print(f'Lamp: {self.model} ({self.color})')
         
-red_lamp: Lamp = Lamp('SmallLamp', 'Red')
-red_lamp.turn_on()
-red_lamp.turn_off()
-red_lamp.color = 'Blue'
-red_lamp.describe()
+# red_lamp: Lamp = Lamp('SmallLamp', 'Red')
+# red_lamp.turn_on()
+# red_lamp.turn_off()
+# red_lamp.color = 'Blue'
+# red_lamp.describe()
 
-green_lamp: Lamp = Lamp('BigLamp', 'Green')
-green_lamp.turn_on()
+# green_lamp: Lamp = Lamp('BigLamp', 'Green')
+# green_lamp.turn_on()
+
+# CLASS VARIABLES & INSTANCE VARIABLES
+# class Animal:
+#     tricks: list[str] = []
+    
+#     def __init__(self, name:str):
+#         self.name = name
+    
+#     def teach_trick(self, trick_name: str):
+#         self.tricks.append(trick_name)
+        
+# if __name__ == '__main__':
+#     dog: Animal = Animal('Dog')
+#     cat: Animal = Animal('Cat')
+#     dog.teach_trick('Make dinner')
+#     dog.teach_trick('Go to work')
+    
+#     print('Dog tricks: ', dog.tricks)
+#     print('Cat tricks: ', cat.tricks)
+
+# GETTERS & SETTERS
+
+class Fruit:
+    def __init__(self, name: str):
+        self._name = name
+    
+    @property
+    def name(self):
+        print(f'{self._name} is being accesed')
+        return self._name
+    
+    @name.setter
+    def name(self, value: str):
+        print(f'{self._name} is now: {value}')
+        self._name = value
+
+if __name__ == '__main__':
+    apple: Fruit = Fruit('Apple')
+    apple.name
+    apple.name = 'Banana'
+    print(apple.name)
