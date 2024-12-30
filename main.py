@@ -298,3 +298,43 @@
 #     print('Outer: ', x)
 
 # fun()
+
+# # # # # # # SECTION 9 Lists(Extended) # # # # # # # 
+# LIST COMPREHENSIONS
+# sample_list = []
+# for i in range(10):
+#     if i%2 == 0:
+#         sample_list.append(i)
+# print(sample_list)
+
+# sample_list2 = [i for i in range(10) if i % 2 == 0]
+# print(sample_list2)
+
+# people: list[str] = ['Mario', 'Luigi', 'Peach']
+# cap_people = [person.upper() for person in people]
+# print(cap_people)
+
+# SLICING LISTS WITH ::
+# numbers: list[int] = list(range(21))
+# print(numbers[::3])
+# print(numbers[10::3])
+# print(numbers[10:16:2])
+# print(numbers[10:])
+# print(numbers[:10])
+
+# MODIFYING LISTS IN A LOOP
+people: list[str] = ['Mario', 'Luigi', 'Peach', 'Toads']
+people2: list[str] = []
+
+for person in people:
+    print(person, ' -> ', people2)
+
+    if person == 'Luigi':
+        pass
+    else:
+        people2.append(person)
+
+    if person == 'Peach':
+        print('Hi I am Peach')
+
+print(people2)
