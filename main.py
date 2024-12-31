@@ -608,21 +608,137 @@
 # print_item(magazine)
 
 # __INIT__ VS __NEW__
-class Connection:
-    __instance = None
+# class Connection:
+#     __instance = None
     
-    def __new__(cls, *args, **kwargs):
-        if cls.__instance is None:
-            print('Connecting...')
-            cls.__instance = super().__new__(cls)
-            return cls.__instance
-        else:
-            print('WARNING: There is already a connection')
-            return cls.__instance
+#     def __new__(cls, *args, **kwargs):
+#         if cls.__instance is None:
+#             print('Connecting...')
+#             cls.__instance = super().__new__(cls)
+#             return cls.__instance
+#         else:
+#             print('WARNING: There is already a connection')
+#             return cls.__instance
     
-    def __init__(self):
-        print('Connected to Internet')
+#     def __init__(self):
+#         print('Connected to Internet')
 
-connection = Connection()
-connection2 = Connection()
-print(connection == connection2)
+# connection = Connection()
+# connection2 = Connection()
+# print(connection == connection2)
+
+# # # # # # # SECTION 11 BUILT IN FUNCTIONS # # # # # # # 
+
+PRINT
+print('This a test', 10, 'Hello', sep=' - ', end='Se acabó')
+
+ENUMERATE
+names: list[str] = ['Mario', 'Luigi', 'Peach', 'Toad']
+for name in names:
+    print(names.index(name),':',name)
+
+for i, name in enumerate(names):
+    print(i, ':', name)
+
+ROUND
+number: float = 1.6666
+print(round(number, 2))
+
+RANGE
+numbers: range = range(0, -10, -1)
+print(list(numbers))
+
+GLOBALS & LOCALS
+var: str = 'GLOBAL'
+
+def hello():
+    return 'GLOBAL'
+
+def bye():
+    bye_str: str = 'str'
+    bye_int: int = 0
+    
+    def inner():
+        pass
+    
+    print(locals())
+
+print(globals())
+
+ALL() & ANY()
+is_connected: bool = True
+has_electricity: bool = False
+has_paid: bool = True
+
+requirements: list[bool] = [is_connected, has_electricity, has_paid]
+
+has_internet: bool = all(requirements)
+has_internet2: bool = any(requirements)
+print('Internet:', has_internet)
+print('Internet:', has_internet2)
+
+ISINSTANCE()
+class Fruit:
+    def __init__(self, name: str):
+        self.name = name
+
+apple: Fruit = Fruit('Apple')
+
+print(isinstance(apple, Fruit))
+print(isinstance(apple, str))
+
+CALLABLE()
+a: str = 'a'
+
+def do_something():
+    pass
+
+def b():
+    pass
+
+print(callable(a))
+print(callable(do_something))
+print(callable(b))
+
+FILTER()
+people:list [str, int] = ['mario', 'luigi', 10, 'Toas', 20]
+
+def is_str(element):
+    return isinstance(element,str)
+
+filtered_people: list[str] = list(filter(is_str, people))
+print(filtered_people)
+
+MAP()
+numbers: list[int] = [1,2,3,4,5,6]
+
+def convert_to_str(element):
+    return str(element)
+
+converted_list: list[str] = list(map(convert_to_str, numbers))
+print(converted_list)
+
+SORTED()
+numbers: list[int] = [1, 6, 4, 5, 3, 2, 9, 8]
+sorted_numbers: list[int] = sorted(numbers, reverse=True)
+
+print(sorted_numbers)
+
+EVAL()
+user_input: str = input('Insert your maths: ')
+result: float = eval(user_input)
+print(result)
+
+EXEC()
+user_input: str = input('Your code: ')
+exec(user_input)
+
+# ZIP()
+people = ('mario', 'Luigi', 'Toad')
+numbers = (10, 20, 30)
+letters = ('a', 'b', 'c')
+
+zipped = zip(people, numbers, letters)
+
+for item in zipped:
+    print(item)
