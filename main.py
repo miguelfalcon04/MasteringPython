@@ -629,116 +629,146 @@
 
 # # # # # # # SECTION 11 BUILT IN FUNCTIONS # # # # # # # 
 
-PRINT
-print('This a test', 10, 'Hello', sep=' - ', end='Se acabó')
+# PRINT
+# print('This a test', 10, 'Hello', sep=' - ', end='Se acabó')
 
-ENUMERATE
-names: list[str] = ['Mario', 'Luigi', 'Peach', 'Toad']
-for name in names:
-    print(names.index(name),':',name)
+# ENUMERATE
+# names: list[str] = ['Mario', 'Luigi', 'Peach', 'Toad']
+# for name in names:
+#     print(names.index(name),':',name)
 
-for i, name in enumerate(names):
-    print(i, ':', name)
+# for i, name in enumerate(names):
+#     print(i, ':', name)
 
-ROUND
-number: float = 1.6666
-print(round(number, 2))
+# ROUND
+# number: float = 1.6666
+# print(round(number, 2))
 
-RANGE
-numbers: range = range(0, -10, -1)
-print(list(numbers))
+# RANGE
+# numbers: range = range(0, -10, -1)
+# print(list(numbers))
 
-GLOBALS & LOCALS
-var: str = 'GLOBAL'
+# GLOBALS & LOCALS
+# var: str = 'GLOBAL'
 
-def hello():
-    return 'GLOBAL'
+# def hello():
+#     return 'GLOBAL'
 
-def bye():
-    bye_str: str = 'str'
-    bye_int: int = 0
+# def bye():
+#     bye_str: str = 'str'
+#     bye_int: int = 0
     
-    def inner():
-        pass
+#     def inner():
+#         pass
     
-    print(locals())
+#     print(locals())
 
-print(globals())
+# print(globals())
 
-ALL() & ANY()
-is_connected: bool = True
-has_electricity: bool = False
-has_paid: bool = True
+# ALL() & ANY()
+# is_connected: bool = True
+# has_electricity: bool = False
+# has_paid: bool = True
 
-requirements: list[bool] = [is_connected, has_electricity, has_paid]
+# requirements: list[bool] = [is_connected, has_electricity, has_paid]
 
-has_internet: bool = all(requirements)
-has_internet2: bool = any(requirements)
-print('Internet:', has_internet)
-print('Internet:', has_internet2)
+# has_internet: bool = all(requirements)
+# has_internet2: bool = any(requirements)
+# print('Internet:', has_internet)
+# print('Internet:', has_internet2)
 
-ISINSTANCE()
-class Fruit:
-    def __init__(self, name: str):
-        self.name = name
+# ISINSTANCE()
+# class Fruit:
+#     def __init__(self, name: str):
+#         self.name = name
 
-apple: Fruit = Fruit('Apple')
+# apple: Fruit = Fruit('Apple')
 
-print(isinstance(apple, Fruit))
-print(isinstance(apple, str))
+# print(isinstance(apple, Fruit))
+# print(isinstance(apple, str))
 
-CALLABLE()
-a: str = 'a'
+# CALLABLE()
+# a: str = 'a'
 
-def do_something():
-    pass
+# def do_something():
+#     pass
 
-def b():
-    pass
+# def b():
+#     pass
 
-print(callable(a))
-print(callable(do_something))
-print(callable(b))
+# print(callable(a))
+# print(callable(do_something))
+# print(callable(b))
 
-FILTER()
-people:list [str, int] = ['mario', 'luigi', 10, 'Toas', 20]
+# FILTER()
+# people:list [str, int] = ['mario', 'luigi', 10, 'Toas', 20]
 
-def is_str(element):
-    return isinstance(element,str)
+# def is_str(element):
+#     return isinstance(element,str)
 
-filtered_people: list[str] = list(filter(is_str, people))
-print(filtered_people)
+# filtered_people: list[str] = list(filter(is_str, people))
+# print(filtered_people)
 
-MAP()
-numbers: list[int] = [1,2,3,4,5,6]
+# MAP()
+# numbers: list[int] = [1,2,3,4,5,6]
 
-def convert_to_str(element):
-    return str(element)
+# def convert_to_str(element):
+#     return str(element)
 
-converted_list: list[str] = list(map(convert_to_str, numbers))
-print(converted_list)
+# converted_list: list[str] = list(map(convert_to_str, numbers))
+# print(converted_list)
 
-SORTED()
-numbers: list[int] = [1, 6, 4, 5, 3, 2, 9, 8]
-sorted_numbers: list[int] = sorted(numbers, reverse=True)
+# SORTED()
+# numbers: list[int] = [1, 6, 4, 5, 3, 2, 9, 8]
+# sorted_numbers: list[int] = sorted(numbers, reverse=True)
 
-print(sorted_numbers)
+# print(sorted_numbers)
 
-EVAL()
-user_input: str = input('Insert your maths: ')
-result: float = eval(user_input)
-print(result)
+# EVAL()
+# user_input: str = input('Insert your maths: ')
+# result: float = eval(user_input)
+# print(result)
 
-EXEC()
-user_input: str = input('Your code: ')
-exec(user_input)
+# EXEC()
+# user_input: str = input('Your code: ')
+# exec(user_input)
 
 # ZIP()
-people = ('mario', 'Luigi', 'Toad')
-numbers = (10, 20, 30)
-letters = ('a', 'b', 'c')
+# people = ('mario', 'Luigi', 'Toad')
+# numbers = (10, 20, 30)
+# letters = ('a', 'b', 'c')
 
-zipped = zip(people, numbers, letters)
+# zipped = zip(people, numbers, letters)
 
-for item in zipped:
-    print(item)
+# for item in zipped:
+#     print(item)
+
+# # # # # # # SECTION 12 PYTHON ADVANCED # # # # # # # 
+
+# # "IS" VS "=="
+# class Fruit:
+#     def __init__(self, name: str, calories: float):
+#         self.name = name,
+#         self.calories = calories
+    
+#     def __eq__(self, value):
+#         return self.__dict__ == value.__dict__
+
+# fruit_a: Fruit = Fruit('Banana', 10)
+# fruit_b: Fruit = Fruit('Banana', 10)
+
+# print(f'fruit_a is fruit_b = {fruit_a is fruit_b}')
+# print(f'fruit_a == fruit_b = {fruit_a == fruit_b}')
+
+# # LAMBDA FUNCTIONS
+def square(a: float) -> float:
+    return a ** 2
+
+sq = lambda a: a ** 2
+
+print(square(4))
+print(sq(4))
+
+numbers: list[int] = [1,2,3,4,5,6,7]
+even: list[int] = list(filter(lambda a: a % 2 == 0, numbers))
+print(even)
