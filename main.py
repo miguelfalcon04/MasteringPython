@@ -761,14 +761,113 @@
 # print(f'fruit_a == fruit_b = {fruit_a == fruit_b}')
 
 # # LAMBDA FUNCTIONS
-def square(a: float) -> float:
-    return a ** 2
+# def square(a: float) -> float:
+#     return a ** 2
 
-sq = lambda a: a ** 2
+# sq = lambda a: a ** 2
 
-print(square(4))
-print(sq(4))
+# print(square(4))
+# print(sq(4))
 
-numbers: list[int] = [1,2,3,4,5,6,7]
-even: list[int] = list(filter(lambda a: a % 2 == 0, numbers))
-print(even)
+# numbers: list[int] = [1,2,3,4,5,6,7]
+# even: list[int] = list(filter(lambda a: a % 2 == 0, numbers))
+# print(even)
+
+# # WALRUS OPERATOR
+
+# def get_info(text: str) -> dict:
+#     return{'text:': text,
+#             'letters': (length := len(text.replace(' ', ''))),
+#             'words': (words := text.split()),
+#             'total_words': (word_length := len(words)),
+#             'avg_per_word': round(length / word_length, 2)}
+
+# for key, value, in get_info('This is some text').items():
+#     print(key, value, sep=': ')
+
+# while user_input := input('You: '):
+#     print('>>', user_input)
+# else:
+#     print('We are done here')
+
+# # DATACLASSES
+# from dataclasses import dataclass
+
+# @dataclass
+# class Fruit2:
+#     name: str
+#     calories: float
+
+# class Fruit:
+#     def __init__(self, name: str, calories: float):
+#         self.name = name,
+#         self.calories = calories
+    
+#     def __eq__(self, value):
+#         self.__dict__ == value.__dict__
+
+# apple: Fruit = Fruit('apple',10)
+# apple2: Fruit2 = Fruit2('apple',10)
+# print(apple == apple2)
+
+# # GENERATORS
+
+# def generate_list(n: int):
+#     for i in range(n):
+#         yield i
+
+# generator = generate_list(100)
+
+# list_a: list[int] = []
+# for number in generator:
+#     list_a.append(number)
+    
+#     if number == 10:
+#         break
+
+# print(list_a)
+# print(next(generator))
+
+# yield_comprehension = (i for i in range(10*100))
+# print(next(yield_comprehension))
+# print(next(yield_comprehension))
+# print(next(yield_comprehension))
+# print(next(yield_comprehension))
+
+# # DELETE
+# people: list[str] = ['Mario', 'Toad']
+# del people[1]
+# print(people)
+
+# data: dict = {
+#     'field1': 100,
+#     'field2': 200
+# }
+# del data['field2']
+# print(data)
+
+# name: str = 'Mario'
+# del name
+
+# from dataclasses import dataclass
+# @dataclass
+# class Fruit:
+#     name: str
+#     calories: float
+
+# apple: Fruit = Fruit('apple', 10)
+# print(apple)
+
+# del apple
+
+# print(apple)
+
+# # ASSERT
+
+def start_program(data: dict):
+    assert isinstance(data, dict), 'Invalid JSON'
+    assert data, 'No data found...'
+    print('Program loaded successfully')
+
+json: dict = {'name':'mario'}
+start_program(data=json)
