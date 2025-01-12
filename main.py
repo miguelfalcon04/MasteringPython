@@ -864,10 +864,94 @@
 
 # # ASSERT
 
-def start_program(data: dict):
-    assert isinstance(data, dict), 'Invalid JSON'
-    assert data, 'No data found...'
-    print('Program loaded successfully')
+# def start_program(data: dict):
+#     assert isinstance(data, dict), 'Invalid JSON'
+#     assert data, 'No data found...'
+#     print('Program loaded successfully')
 
-json: dict = {'name':'mario'}
-start_program(data=json)
+# json: dict = {'name':'mario'}
+# start_program(data=json)
+
+# # MATCH-CASE
+status: int = 405
+
+if status == 400:
+    print('Bad request')
+elif status == 403:
+    print('Forbidden request')
+elif status == 404:
+    print('Not found...')
+else:
+    print('Something went wrong...')
+
+
+match status:
+    case 400:
+        print('Bad request')
+    case 403:
+        print('Forbidden request')
+    case 404:
+        print('Not found...')
+    case _:
+        print('Something went wrong...')
+
+
+user_input: str = input('command: ')
+p_command: list[str] = user_input.split()
+
+match p_command:
+    case ['find', *images]:
+        print(f'Finding: {images}')
+    case ['download', *images]:
+        print(f'Downloading: {images}')
+    case ['cancel' | 'delete', *images] if len(images) > 1:
+        print(f'Deleting: {images}')
+
+
+# # DECORATORS
+
+from functools import wraps
+from time import perf_counter, sleep
+from typing import Callable
+
+def get_time(func):
+    """Times any function"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start_time: float = perf_counter()
+        func(*args, **kwargs)
+        end_time: float = perf_counter()
+        
+        total_time: float = round(end_time -start_time, 3)
+        print('Time: ', total_time, 'seconds')
+    return wrapper
+
+@get_time
+def do_something(param):
+    """Do something important"""
+    sleep(1)
+    print(param)
+    for i in range(10**8):
+        pass
+
+do_something('Hello')
+
+def repeat(times: int):
+    """Repeat function call x amount of times"""
+    
+    def decorator(func: Callable):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            value = None
+            for _ in range(times):
+                value = func(*args, **kwargs)
+            
+            return value
+        return wrapper
+    return decorator
+
+@repeat(5)
+def func1():
+    print('Hello')
+
+func1()
