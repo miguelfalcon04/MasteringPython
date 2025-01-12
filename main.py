@@ -873,85 +873,204 @@
 # start_program(data=json)
 
 # # MATCH-CASE
-status: int = 405
+# status: int = 405
 
-if status == 400:
-    print('Bad request')
-elif status == 403:
-    print('Forbidden request')
-elif status == 404:
-    print('Not found...')
-else:
-    print('Something went wrong...')
-
-
-match status:
-    case 400:
-        print('Bad request')
-    case 403:
-        print('Forbidden request')
-    case 404:
-        print('Not found...')
-    case _:
-        print('Something went wrong...')
+# if status == 400:
+#     print('Bad request')
+# elif status == 403:
+#     print('Forbidden request')
+# elif status == 404:
+#     print('Not found...')
+# else:
+#     print('Something went wrong...')
 
 
-user_input: str = input('command: ')
-p_command: list[str] = user_input.split()
+# match status:
+#     case 400:
+#         print('Bad request')
+#     case 403:
+#         print('Forbidden request')
+#     case 404:
+#         print('Not found...')
+#     case _:
+#         print('Something went wrong...')
 
-match p_command:
-    case ['find', *images]:
-        print(f'Finding: {images}')
-    case ['download', *images]:
-        print(f'Downloading: {images}')
-    case ['cancel' | 'delete', *images] if len(images) > 1:
-        print(f'Deleting: {images}')
+
+# user_input: str = input('command: ')
+# p_command: list[str] = user_input.split()
+
+# match p_command:
+#     case ['find', *images]:
+#         print(f'Finding: {images}')
+#     case ['download', *images]:
+#         print(f'Downloading: {images}')
+#     case ['cancel' | 'delete', *images] if len(images) > 1:
+#         print(f'Deleting: {images}')
 
 
 # # DECORATORS
 
-from functools import wraps
-from time import perf_counter, sleep
-from typing import Callable
+# from functools import wraps
+# from time import perf_counter, sleep
+# from typing import Callable
 
-def get_time(func):
-    """Times any function"""
+# def get_time(func):
+#     """Times any function"""
+#     @wraps(func)
+#     def wrapper(*args, **kwargs):
+#         start_time: float = perf_counter()
+#         func(*args, **kwargs)
+#         end_time: float = perf_counter()
+        
+#         total_time: float = round(end_time -start_time, 3)
+#         print('Time: ', total_time, 'seconds')
+#     return wrapper
+
+# @get_time
+# def do_something(param):
+#     """Do something important"""
+#     sleep(1)
+#     print(param)
+#     for i in range(10**8):
+#         pass
+
+# do_something('Hello')
+
+# def repeat(times: int):
+#     """Repeat function call x amount of times"""
+    
+#     def decorator(func: Callable):
+#         @wraps(func)
+#         def wrapper(*args, **kwargs):
+#             value = None
+#             for _ in range(times):
+#                 value = func(*args, **kwargs)
+            
+#             return value
+#         return wrapper
+#     return decorator
+
+# @repeat(5)
+# def func1():
+#     print('Hello')
+
+# func1()
+
+# # MEMOIZATION
+from functools import wraps
+from time import perf_counter
+import sys
+
+def memoize(func):
+    cache: dict = {}
+    
     @wraps(func)
     def wrapper(*args, **kwargs):
-        start_time: float = perf_counter()
-        func(*args, **kwargs)
-        end_time: float = perf_counter()
+        key: str = str(args)+ str(kwargs)
         
-        total_time: float = round(end_time -start_time, 3)
-        print('Time: ', total_time, 'seconds')
+        if key not in cache:
+            cache[key] = func(*args, **kwargs)
+        return cache[key]
     return wrapper
 
-@get_time
-def do_something(param):
-    """Do something important"""
-    sleep(1)
-    print(param)
-    for i in range(10**8):
+
+@memoize
+def fibonacci(n) -> int:
+    if n < 2:
+        return n
+    return fibonacci(n -1) + fibonacci(n - 2)
+
+sys.setrecursionlimit(10_000)
+start: float = perf_counter()
+f: int = fibonacci(1000)
+end: float = perf_counter()
+print(f)
+print(f'Time: {end - start}')
+
+# # CONTEXT MANAGERS
+class File:
+    def __init__(self, name: str):
+        self.name = name
+    
+    def __enter__(self):
+        print(f'Opnening {self.name}...')
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print(f'Closing {self.name}')
+
+with File('main.py') as file:
+    print(file.name)
+
+
+# # TIMING CODE PERFORMANCE
+import time
+import timeit
+
+def time_func(func):
+    start_time: float = time.perf_counter()
+
+    for i in range(10**3):
         pass
 
-do_something('Hello')
-
-def repeat(times: int):
-    """Repeat function call x amount of times"""
-    
-    def decorator(func: Callable):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            value = None
-            for _ in range(times):
-                value = func(*args, **kwargs)
-            
-            return value
-        return wrapper
-    return decorator
-
-@repeat(5)
-def func1():
     print('Hello')
+    time.sleep(1)
 
-func1()
+    end_time: float = time.perf_counter()
+
+    print(f'Total time:', end_time-start_time, 'seconds')
+
+def make_calculation(first: int, second: int):
+    for i in range(10**3):
+        pass
+    return first + second
+
+def do_something():
+    for i in range(10):
+        x: int = i ** i
+
+
+def get_time(func: str, repeat: int, number: int) -> float:
+    speed: float = min(timeit.repeat(func, repeat=repeat, number=number, globals=globals()))
+    print(f'{func} --> {round(speed, 4)} seconds (ran {repeat * number:,} times)')
+    return speed
+
+a, b = 1, 2
+get_time('do_something()', repeat=10, number=10**5)
+get_time('make_calculation(a, b)', repeat=10, number=10**2)
+
+# # MONKEY PATCHING
+
+import requests
+
+def get(url: str):
+    return '<TEST_RESPONSE>'
+
+requests.get = get
+
+data = requests.get('https://www.apple.com')
+print(data)
+
+# # CUSTOM EXCEPTIONS
+
+class NegativeException(Exception):
+    """Raise if a value is below 0"""
+    def __init__(self, number: float, error_code: int):
+        self.number = number
+        self.error_code = error_code
+        super().__init__(f'{self.number} is less than 0 (ERROR_CODE: {self.error_code})', self.number, self.error_code)
+    
+    def __str__(self):
+        return f'{self.number} is less than 0 (ERROR_CODE: {self.error_code})'
+    
+    def custom_method(self):
+        print((self.number, self.error_code), 'were used by the custom method')
+    
+    def __reduce__(self):
+        return NegativeException, (self.number, self.error_code)
+try:
+    raise NegativeException(-5, 999)
+except NegativeException as e:
+    print(e)
+    print(e.args)
+    e.custom_method()
