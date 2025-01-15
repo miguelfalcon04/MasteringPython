@@ -957,120 +957,150 @@
 # func1()
 
 # # MEMOIZATION
-from functools import wraps
-from time import perf_counter
-import sys
+# from functools import wraps
+# from time import perf_counter
+# import sys
 
-def memoize(func):
-    cache: dict = {}
+# def memoize(func):
+#     cache: dict = {}
     
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        key: str = str(args)+ str(kwargs)
+#     @wraps(func)
+#     def wrapper(*args, **kwargs):
+#         key: str = str(args)+ str(kwargs)
         
-        if key not in cache:
-            cache[key] = func(*args, **kwargs)
-        return cache[key]
-    return wrapper
+#         if key not in cache:
+#             cache[key] = func(*args, **kwargs)
+#         return cache[key]
+#     return wrapper
 
 
-@memoize
-def fibonacci(n) -> int:
-    if n < 2:
-        return n
-    return fibonacci(n -1) + fibonacci(n - 2)
+# @memoize
+# def fibonacci(n) -> int:
+#     if n < 2:
+#         return n
+#     return fibonacci(n -1) + fibonacci(n - 2)
 
-sys.setrecursionlimit(10_000)
-start: float = perf_counter()
-f: int = fibonacci(1000)
-end: float = perf_counter()
-print(f)
-print(f'Time: {end - start}')
+# sys.setrecursionlimit(10_000)
+# start: float = perf_counter()
+# f: int = fibonacci(1000)
+# end: float = perf_counter()
+# print(f)
+# print(f'Time: {end - start}')
 
 # # CONTEXT MANAGERS
-class File:
-    def __init__(self, name: str):
-        self.name = name
+# class File:
+#     def __init__(self, name: str):
+#         self.name = name
     
-    def __enter__(self):
-        print(f'Opnening {self.name}...')
-        return self
+#     def __enter__(self):
+#         print(f'Opnening {self.name}...')
+#         return self
     
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        print(f'Closing {self.name}')
+#     def __exit__(self, exc_type, exc_val, exc_tb):
+#         print(f'Closing {self.name}')
 
-with File('main.py') as file:
-    print(file.name)
+# with File('main.py') as file:
+#     print(file.name)
 
 
 # # TIMING CODE PERFORMANCE
-import time
-import timeit
+# import time
+# import timeit
 
-def time_func(func):
-    start_time: float = time.perf_counter()
+# def time_func(func):
+#     start_time: float = time.perf_counter()
 
-    for i in range(10**3):
-        pass
+#     for i in range(10**3):
+#         pass
 
-    print('Hello')
-    time.sleep(1)
+#     print('Hello')
+#     time.sleep(1)
 
-    end_time: float = time.perf_counter()
+#     end_time: float = time.perf_counter()
 
-    print(f'Total time:', end_time-start_time, 'seconds')
+#     print(f'Total time:', end_time-start_time, 'seconds')
 
-def make_calculation(first: int, second: int):
-    for i in range(10**3):
-        pass
-    return first + second
+# def make_calculation(first: int, second: int):
+#     for i in range(10**3):
+#         pass
+#     return first + second
 
-def do_something():
-    for i in range(10):
-        x: int = i ** i
+# def do_something():
+#     for i in range(10):
+#         x: int = i ** i
 
 
-def get_time(func: str, repeat: int, number: int) -> float:
-    speed: float = min(timeit.repeat(func, repeat=repeat, number=number, globals=globals()))
-    print(f'{func} --> {round(speed, 4)} seconds (ran {repeat * number:,} times)')
-    return speed
+# def get_time(func: str, repeat: int, number: int) -> float:
+#     speed: float = min(timeit.repeat(func, repeat=repeat, number=number, globals=globals()))
+#     print(f'{func} --> {round(speed, 4)} seconds (ran {repeat * number:,} times)')
+#     return speed
 
-a, b = 1, 2
-get_time('do_something()', repeat=10, number=10**5)
-get_time('make_calculation(a, b)', repeat=10, number=10**2)
+# a, b = 1, 2
+# get_time('do_something()', repeat=10, number=10**5)
+# get_time('make_calculation(a, b)', repeat=10, number=10**2)
 
 # # MONKEY PATCHING
 
-import requests
+# import requests
 
-def get(url: str):
-    return '<TEST_RESPONSE>'
+# def get(url: str):
+#     return '<TEST_RESPONSE>'
 
-requests.get = get
+# requests.get = get
 
-data = requests.get('https://www.apple.com')
-print(data)
+# data = requests.get('https://www.apple.com')
+# print(data)
 
 # # CUSTOM EXCEPTIONS
 
-class NegativeException(Exception):
-    """Raise if a value is below 0"""
-    def __init__(self, number: float, error_code: int):
-        self.number = number
-        self.error_code = error_code
-        super().__init__(f'{self.number} is less than 0 (ERROR_CODE: {self.error_code})', self.number, self.error_code)
+# class NegativeException(Exception):
+#     """Raise if a value is below 0"""
+#     def __init__(self, number: float, error_code: int):
+#         self.number = number
+#         self.error_code = error_code
+#         super().__init__(f'{self.number} is less than 0 (ERROR_CODE: {self.error_code})', self.number, self.error_code)
     
-    def __str__(self):
-        return f'{self.number} is less than 0 (ERROR_CODE: {self.error_code})'
+#     def __str__(self):
+#         return f'{self.number} is less than 0 (ERROR_CODE: {self.error_code})'
     
-    def custom_method(self):
-        print((self.number, self.error_code), 'were used by the custom method')
+#     def custom_method(self):
+#         print((self.number, self.error_code), 'were used by the custom method')
     
-    def __reduce__(self):
-        return NegativeException, (self.number, self.error_code)
-try:
-    raise NegativeException(-5, 999)
-except NegativeException as e:
-    print(e)
-    print(e.args)
-    e.custom_method()
+#     def __reduce__(self):
+#         return NegativeException, (self.number, self.error_code)
+# try:
+#     raise NegativeException(-5, 999)
+# except NegativeException as e:
+#     print(e)
+#     print(e.args)
+#     e.custom_method()
+
+
+# # # # # # # SECTION 14 File Management # # # # # # # 
+
+# # READING FILES
+
+with open('sample.text', 'r') as text:
+    t : list[str] = text.readlines()
+    print(text.readline())
+    print(text.read())
+    print(t)
+
+
+# # WRITING & CREATING FILES
+with open('sample.text', 'a+') as text:
+    text.write('\n1234')
+    text.seek(0)
+    print(text.read())
+
+# # Reemplaza todo el archivo
+# with open('sample.text', 'w+') as text:
+#     text.write('\n1234')
+#     text.seek(0)
+#     print(text.read())
+
+# # Crea el archivo si no existe. Si existe da un error
+# with open('hello.text', 'x+') as text:
+#     text.write('\n1234')
+#     text.seek(0)
+#     print(text.read())
