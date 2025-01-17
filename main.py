@@ -1080,18 +1080,18 @@
 
 # # READING FILES
 
-with open('sample.text', 'r') as text:
-    t : list[str] = text.readlines()
-    print(text.readline())
-    print(text.read())
-    print(t)
+# with open('sample.text', 'r') as text:
+#     t : list[str] = text.readlines()
+#     print(text.readline())
+#     print(text.read())
+#     print(t)
 
 
 # # WRITING & CREATING FILES
-with open('sample.text', 'a+') as text:
-    text.write('\n1234')
-    text.seek(0)
-    print(text.read())
+# with open('sample.text', 'a+') as text:
+#     text.write('\n1234')
+#     text.seek(0)
+#     print(text.read())
 
 # # Reemplaza todo el archivo
 # with open('sample.text', 'w+') as text:
@@ -1104,3 +1104,15 @@ with open('sample.text', 'a+') as text:
 #     text.write('\n1234')
 #     text.seek(0)
 #     print(text.read())
+
+# # DELETING FILES
+import os
+
+# if os.path.exists('hello.text'):
+    # os.remove('hello.text')
+
+for item in os.listdir('sample_folder'):
+    if os.path.exists('sample_folder/' + item):
+        os.remove('sample_folder/' + item)
+
+os.rmdir('sample_folder')
