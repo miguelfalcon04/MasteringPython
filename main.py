@@ -1118,54 +1118,108 @@
 # os.rmdir('sample_folder')
 
 # # HANDLING JSON
-import json
+# import json
 
-def get_json(file: str) -> dict:
-    with open(file, 'r') as file:
-        data: str = file.read()
-        actual: dict = json.loads(data)
-        return actual
+# def get_json(file: str) -> dict:
+#     with open(file, 'r') as file:
+#         data: str = file.read()
+#         actual: dict = json.loads(data)
+#         return actual
 
-sample_data: dict = get_json('data.json') 
-print(sample_data)
+# sample_data: dict = get_json('data.json') 
+# print(sample_data)
 
-sample: dict = {'name': 'Elon', 'age': 12, 'has_mars': False}
+# sample: dict = {'name': 'Elon', 'age': 12, 'has_mars': False}
 # sample_json = json.dumps(sample)
 # print(sample_json)
 
-with open('sample.json', 'w') as file:
-    json.dump(sample, file)
+# with open('sample.json', 'w') as file:
+#     json.dump(sample, file)
 
 # # CACHING JSON
-import json
-import requests
+# import json
+# import requests
 
-def fech_data(*, update: bool= False, json_cache: str, url: str) -> dict:
-    if update:
-        json_data = None
-    else:
-        try:
-            with open(json_cache, 'r') as file:
-                json_data = json.load(file)
-                print('Fetched data from the local cache!')
+# def fech_data(*, update: bool= False, json_cache: str, url: str) -> dict:
+#     if update:
+#         json_data = None
+#     else:
+#         try:
+#             with open(json_cache, 'r') as file:
+#                 json_data = json.load(file)
+#                 print('Fetched data from the local cache!')
 
-        except(FileNotFoundError, json.JSONDecodeError) as e:
-            print(f'No local cache found ({e})')
-            json_data = None
+#         except(FileNotFoundError, json.JSONDecodeError) as e:
+#             print(f'No local cache found ({e})')
+#             json_data = None
     
-    if not json_data:
-        print('Fetching new json data... (Creating local cache)')
-        json_data = requests.get(url).json()
-        with open(json_cache, 'w') as file:
-            json.dump(json_data, file)
-    return json_data
+#     if not json_data:
+#         print('Fetching new json data... (Creating local cache)')
+#         json_data = requests.get(url).json()
+#         with open(json_cache, 'w') as file:
+#             json.dump(json_data, file)
+#     return json_data
 
-api_url: str = 'https://dummyjson.com/comments'
-cache_file: str = 'comments.json'
+# api_url: str = 'https://dummyjson.com/comments'
+# cache_file: str = 'comments.json'
 
-data: dict = fech_data(
-    update= False,
-    json_cache=cache_file,
-    url=api_url
-)
-print(data)
+# data: dict = fech_data(
+#     update= False,
+#     json_cache=cache_file,
+#     url=api_url
+# )
+# print(data)
+
+# # GLOB
+import glob
+
+# ? matches any single character
+print(glob.glob('?ata.json'))
+
+# * matches everything
+print(glob.glob('*.json'))
+
+# The first letter must be a or d or c
+print(glob.glob('[sdc]*'))
+
+# The first letter must not be a or d or c
+print(glob.glob('[!sdc]*'))
+
+print(glob.glob('**/*.js', 
+                root_dir='/Users/falco/PythonUdemy',
+                recursive=True,
+                include_hidden=True))
+
+globs = glob.iglob('**/*.py', 
+                root_dir='/Users/falco/PythonUdemy',
+                recursive=True,
+                include_hidden=True)
+
+for i, file in enumerate(globs):
+    print(i, file, sep=':')
+
+
+# # PICKLING
+import pickle
+
+text: str = 'text'
+number: int = 10
+
+# with open('save.txt', 'w') as file:
+#     file.write(text + '\n')
+#     file.write(str(number) + '\n')
+
+with open('save.txt', 'r') as file:
+    print(file.read())
+
+class Fruit:
+    def __init__(self, name: str, calories: float):
+        self.name = name
+        self.calories = calories
+    def describe_fruit(self):
+        print(self.name, ':', self.calories)
+
+with open('save_pickle.txt', 'rb') as file:
+    fruit: Fruit = pickle.load(file)
+
+print(fruit.describe_fruit())
