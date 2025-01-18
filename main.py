@@ -1171,55 +1171,79 @@
 # print(data)
 
 # # GLOB
-import glob
+# import glob
 
-# ? matches any single character
-print(glob.glob('?ata.json'))
+# # ? matches any single character
+# print(glob.glob('?ata.json'))
 
-# * matches everything
-print(glob.glob('*.json'))
+# # * matches everything
+# print(glob.glob('*.json'))
 
-# The first letter must be a or d or c
-print(glob.glob('[sdc]*'))
+# # The first letter must be a or d or c
+# print(glob.glob('[sdc]*'))
 
-# The first letter must not be a or d or c
-print(glob.glob('[!sdc]*'))
+# # The first letter must not be a or d or c
+# print(glob.glob('[!sdc]*'))
 
-print(glob.glob('**/*.js', 
-                root_dir='/Users/falco/PythonUdemy',
-                recursive=True,
-                include_hidden=True))
+# print(glob.glob('**/*.js', 
+#                 root_dir='/Users/falco/PythonUdemy',
+#                 recursive=True,
+#                 include_hidden=True))
 
-globs = glob.iglob('**/*.py', 
-                root_dir='/Users/falco/PythonUdemy',
-                recursive=True,
-                include_hidden=True)
+# globs = glob.iglob('**/*.py', 
+#                 root_dir='/Users/falco/PythonUdemy',
+#                 recursive=True,
+#                 include_hidden=True)
 
-for i, file in enumerate(globs):
-    print(i, file, sep=':')
+# for i, file in enumerate(globs):
+#     print(i, file, sep=':')
 
 
 # # PICKLING
-import pickle
+# import pickle
 
-text: str = 'text'
-number: int = 10
+# text: str = 'text'
+# number: int = 10
 
 # with open('save.txt', 'w') as file:
 #     file.write(text + '\n')
 #     file.write(str(number) + '\n')
 
-with open('save.txt', 'r') as file:
-    print(file.read())
+# with open('save.txt', 'r') as file:
+#     print(file.read())
 
-class Fruit:
-    def __init__(self, name: str, calories: float):
-        self.name = name
-        self.calories = calories
-    def describe_fruit(self):
-        print(self.name, ':', self.calories)
+# class Fruit:
+#     def __init__(self, name: str, calories: float):
+#         self.name = name
+#         self.calories = calories
+#     def describe_fruit(self):
+#         print(self.name, ':', self.calories)
 
-with open('save_pickle.txt', 'rb') as file:
-    fruit: Fruit = pickle.load(file)
+# with open('save_pickle.txt', 'rb') as file:
+#     fruit: Fruit = pickle.load(file)
 
-print(fruit.describe_fruit())
+# print(fruit.describe_fruit())
+
+# # # # # # # SECTION 15 AsyncIO # # # # # # # 
+import asyncio
+
+async def fetch_data(data: int) -> dict:
+    print('Fetching data...')
+    await asyncio.sleep(2)
+    return {'data': data}
+
+async def counter():
+    for i in range(10):
+        await asyncio.sleep(0.5)
+        print(i)
+
+async def main():
+    task1 = asyncio.create_task(fetch_data(123))
+    task2 = asyncio.create_task(counter())
+    
+    data: dict = await task1
+    print(data)
+    await task2
+
+asyncio.run(main())
+
