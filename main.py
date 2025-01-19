@@ -1320,18 +1320,18 @@
 # # # # # # # SECTION 16 MULTITHREADING # # # # # # # 
 
 # # THREADS
-import threading
-import time
+# import threading
+# import time
 
-def process_data(name:str, count: int):
-    print(f'Starting {name}....')
+# def process_data(name:str, count: int):
+#     print(f'Starting {name}....')
     
-    for i in range(count):
-        print(name, i + 1, sep=': ')
-        time.sleep(1)
+#     for i in range(count):
+#         print(name, i + 1, sep=': ')
+#         time.sleep(1)
 
-thread_one = threading.Thread(target=process_data, args=('Thread1', 10))
-thread_two = threading.Thread(target=process_data, args=('Thread2', 5))
+# thread_one = threading.Thread(target=process_data, args=('Thread1', 10))
+# thread_two = threading.Thread(target=process_data, args=('Thread2', 5))
 
 # thread_one.start()
 # time.sleep(1)
@@ -1339,42 +1339,104 @@ thread_two = threading.Thread(target=process_data, args=('Thread2', 5))
 
 # # LOCKS
 
-lock = threading.Lock()
-def counter(limit: int, name: str):
-    for i in range(limit):
-        time.sleep(0.5)
-        print(name, i+1, sep=': ')
+# lock = threading.Lock()
+# def counter(limit: int, name: str):
+#     for i in range(limit):
+#         time.sleep(0.5)
+#         print(name, i+1, sep=': ')
 
-def task1():
-    lock.acquire()
-    counter(5, 'T-1')
-    lock.release()
+# def task1():
+#     lock.acquire()
+#     counter(5, 'T-1')
+#     lock.release()
 
-def task2():
-    lock.acquire() # If lock is being used in another place until it is not release it wont start 
-    counter(5, 'T-2')
-    lock.release()
+# def task2():
+#     lock.acquire() # If lock is being used in another place until it is not release it wont start 
+#     counter(5, 'T-2')
+#     lock.release()
 
-def task3():
-    counter(5, 'T-3')
+# def task3():
+#     counter(5, 'T-3')
 
-def main():
-    thread = threading.Thread(target=task1)
-    thread2 = threading.Thread(target=task2) 
-    thread3 = threading.Thread(target=task3) 
+# def main():
+#     thread = threading.Thread(target=task1)
+#     thread2 = threading.Thread(target=task2) 
+#     thread3 = threading.Thread(target=task3) 
     
     # thread.start()
     # thread2.start()
     # thread3.start()
 
-main()
+# main()
 
 # # DAEMON THREADS
 
-def infinite_loop():
-    while True:
-        print(time.time())
-        time.sleep(1)
+# def infinite_loop():
+#     while True:
+#         print(time.time())
+#         time.sleep(1)
 
-thread_infinite = threading.Thread(target=infinite_loop, daemon=True) #Just a low priority thread that can be shutted down by other threads
-thread_infinite.start()
+# thread_infinite = threading.Thread(target=infinite_loop, daemon=True) #Just a low priority thread that can be shutted down by other threads
+# thread_infinite.start()
+
+# # SEMAPHORES Create a limit of how many locks can be used
+# # WITH LOCK / SEMAPHORE
+
+import threading
+import time
+
+sem = threading.Semaphore(5)
+
+def process_something(id: int):
+    # sem.acquire()
+    # print(f'{id} --> Running')
+    # time.sleep(5)
+    # print(f'{id} --> Finished')
+    # sem.release()
+    
+    # # The same. It opens and release automatically
+    with sem:
+        print(f'{id} --> Running')
+        time.sleep(5)
+        print(f'{id} --> Finished')
+
+# for i in range(10):
+#     time.sleep(0.5)
+#     thread = threading.Thread(target=process_something, kwargs={'id': i + 1})
+#     thread.start()
+
+
+# # RACE CONDITIONS
+
+lock = threading.Lock()
+
+def edit(operation: str, amount: int, repeat: int):
+    global value
+    
+    lock.acquire()
+    for _ in range(repeat):
+        temp: int = value
+        time.sleep(0)
+        if operation == 'add':
+            temp += amount
+        elif operation == 'subtract':
+            temp -= amount
+        
+        time.sleep(0)
+        value = temp
+    
+    lock.release()
+
+value: int = 0
+adder = threading.Thread(target=edit, args=('add', 100, 100_000))
+subtarctor = threading.Thread(target=edit, args=('subtract', 100, 100_000))
+
+adder.start()
+subtarctor.start()
+
+print('Waiting for threads to finish...')
+
+adder.join()
+subtarctor.join()
+
+print(f'{value = }')
