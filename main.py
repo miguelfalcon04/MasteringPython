@@ -1225,25 +1225,94 @@
 # print(fruit.describe_fruit())
 
 # # # # # # # SECTION 15 AsyncIO # # # # # # # 
+# import asyncio
+
+# async def fetch_data(data: int) -> dict:
+#     print('Fetching data...')
+#     await asyncio.sleep(2)
+#     return {'data': data}
+
+# async def counter():
+#     for i in range(10):
+#         await asyncio.sleep(0.5)
+#         print(i)
+
+# async def main():
+#     task1 = asyncio.create_task(fetch_data(123))
+#     task2 = asyncio.create_task(counter())
+    
+#     data: dict = await task1
+#     print(data)
+#     await task2
+
+# asyncio.run(main())
+
+# # TASKS
+# import asyncio
+
+# async def fetch_data(data: int) -> dict:
+#     print('Fetching data...')
+#     await asyncio.sleep(6)
+#     return {'data': data}
+
+# async def main():
+#     task = asyncio.create_task(fetch_data(100))
+#     await asyncio.sleep(4)
+    
+#     # task.cancel()
+#     # await asyncio.sleep(0.1)
+#     # print(task.cancelled())
+#     try:
+#         await asyncio.wait_for(task, timeout=5)
+        
+#         if task.done():
+#             data: dict = task.result()
+#             print(data)
+#         else:
+#             print('Data not ready')
+#     except asyncio.CancelledError:
+#         print('task was cancelled')
+
+# asyncio.run(main())
+
+# # GATHER
+# import asyncio
+
+# async def fetch_data(data: int) -> dict:
+#     print('Fetching data...')
+#     await asyncio.sleep(1)
+    
+#     if data == 0:
+#         raise Exception('No data')
+#     return {'data': data}
+
+# async def main():
+#     tasks = asyncio.gather(
+#         fetch_data(1),
+#         fetch_data(2),
+#         fetch_data(3),
+#         fetch_data(0),
+#         return_exceptions=True
+#     )
+#     results = await tasks
+#     print(results)
+
+# asyncio.run(main())
+
+# # SLEEP
 import asyncio
 
-async def fetch_data(data: int) -> dict:
-    print('Fetching data...')
-    await asyncio.sleep(2)
-    return {'data': data}
-
-async def counter():
-    for i in range(10):
-        await asyncio.sleep(0.5)
+async def counter(e):
+    print('starting task')
+    for i in range(e):
         print(i)
+        if i % 10_000 == 0:
+            await asyncio.sleep(0)
 
 async def main():
-    task1 = asyncio.create_task(fetch_data(123))
-    task2 = asyncio.create_task(counter())
-    
-    data: dict = await task1
-    print(data)
-    await task2
+    print('Started')
+    task = asyncio.create_task(counter(100_000_000))
+    await asyncio.sleep(1)
+    task.cancel()
 
 asyncio.run(main())
-
