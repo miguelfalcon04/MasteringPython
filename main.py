@@ -1300,19 +1300,81 @@
 # asyncio.run(main())
 
 # # SLEEP
-import asyncio
+# import asyncio
 
-async def counter(e):
-    print('starting task')
-    for i in range(e):
-        print(i)
-        if i % 10_000 == 0:
-            await asyncio.sleep(0)
+# async def counter(e):
+#     print('starting task')
+#     for i in range(e):
+#         print(i)
+#         if i % 10_000 == 0:
+#             await asyncio.sleep(0)
 
-async def main():
-    print('Started')
-    task = asyncio.create_task(counter(100_000_000))
-    await asyncio.sleep(1)
-    task.cancel()
+# async def main():
+#     print('Started')
+#     task = asyncio.create_task(counter(100_000_000))
+#     await asyncio.sleep(1)
+#     task.cancel()
 
-asyncio.run(main())
+# asyncio.run(main())
+
+# # # # # # # SECTION 16 MULTITHREADING # # # # # # # 
+
+# # THREADS
+import threading
+import time
+
+def process_data(name:str, count: int):
+    print(f'Starting {name}....')
+    
+    for i in range(count):
+        print(name, i + 1, sep=': ')
+        time.sleep(1)
+
+thread_one = threading.Thread(target=process_data, args=('Thread1', 10))
+thread_two = threading.Thread(target=process_data, args=('Thread2', 5))
+
+# thread_one.start()
+# time.sleep(1)
+# thread_two.start()
+
+# # LOCKS
+
+lock = threading.Lock()
+def counter(limit: int, name: str):
+    for i in range(limit):
+        time.sleep(0.5)
+        print(name, i+1, sep=': ')
+
+def task1():
+    lock.acquire()
+    counter(5, 'T-1')
+    lock.release()
+
+def task2():
+    lock.acquire() # If lock is being used in another place until it is not release it wont start 
+    counter(5, 'T-2')
+    lock.release()
+
+def task3():
+    counter(5, 'T-3')
+
+def main():
+    thread = threading.Thread(target=task1)
+    thread2 = threading.Thread(target=task2) 
+    thread3 = threading.Thread(target=task3) 
+    
+    # thread.start()
+    # thread2.start()
+    # thread3.start()
+
+main()
+
+# # DAEMON THREADS
+
+def infinite_loop():
+    while True:
+        print(time.time())
+        time.sleep(1)
+
+thread_infinite = threading.Thread(target=infinite_loop, daemon=True) #Just a low priority thread that can be shutted down by other threads
+thread_infinite.start()
