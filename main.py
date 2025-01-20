@@ -1382,23 +1382,23 @@
 # # SEMAPHORES Create a limit of how many locks can be used
 # # WITH LOCK / SEMAPHORE
 
-import threading
-import time
+# import threading
+# import time
 
-sem = threading.Semaphore(5)
+# sem = threading.Semaphore(5)
 
-def process_something(id: int):
-    # sem.acquire()
-    # print(f'{id} --> Running')
-    # time.sleep(5)
-    # print(f'{id} --> Finished')
-    # sem.release()
+# def process_something(id: int):
+#     # sem.acquire()
+#     # print(f'{id} --> Running')
+#     # time.sleep(5)
+#     # print(f'{id} --> Finished')
+#     # sem.release()
     
-    # # The same. It opens and release automatically
-    with sem:
-        print(f'{id} --> Running')
-        time.sleep(5)
-        print(f'{id} --> Finished')
+#     # # The same. It opens and release automatically
+#     with sem:
+#         print(f'{id} --> Running')
+#         time.sleep(5)
+#         print(f'{id} --> Finished')
 
 # for i in range(10):
 #     time.sleep(0.5)
@@ -1408,35 +1408,106 @@ def process_something(id: int):
 
 # # RACE CONDITIONS
 
-lock = threading.Lock()
+# lock = threading.Lock()
 
-def edit(operation: str, amount: int, repeat: int):
-    global value
+# def edit(operation: str, amount: int, repeat: int):
+#     global value
     
-    lock.acquire()
-    for _ in range(repeat):
-        temp: int = value
-        time.sleep(0)
-        if operation == 'add':
-            temp += amount
-        elif operation == 'subtract':
-            temp -= amount
+#     lock.acquire()
+#     for _ in range(repeat):
+#         temp: int = value
+#         time.sleep(0)
+#         if operation == 'add':
+#             temp += amount
+#         elif operation == 'subtract':
+#             temp -= amount
         
-        time.sleep(0)
-        value = temp
+#         time.sleep(0)
+#         value = temp
     
-    lock.release()
+#     lock.release()
 
-value: int = 0
-adder = threading.Thread(target=edit, args=('add', 100, 100_000))
-subtarctor = threading.Thread(target=edit, args=('subtract', 100, 100_000))
+# value: int = 0
+# adder = threading.Thread(target=edit, args=('add', 100, 100_000))
+# subtarctor = threading.Thread(target=edit, args=('subtract', 100, 100_000))
 
-adder.start()
-subtarctor.start()
+# adder.start()
+# subtarctor.start()
 
-print('Waiting for threads to finish...')
+# print('Waiting for threads to finish...')
 
-adder.join()
-subtarctor.join()
+# adder.join()
+# subtarctor.join()
 
-print(f'{value = }')
+# print(f'{value = }')
+
+# # # # # # # SECTION 17 MULTIPROCESSING # # # # # # # 
+
+# # PROCESSES
+import multiprocessing as mp
+from time_stuff import get_time, timestamp, kill_time
+import os
+
+def func(param):
+    print(f'Starting {mp.current_process().name} ({os.getpid()})... ({timestamp()})')
+    kill_time()
+    print(f'{os.getpid()} finished ({timestamp()})')
+
+@get_time
+def main():
+    process = mp.Process(name='Process-1', target=func, args=('Sample',))
+    process2 = mp.Process(name='Process-2', target=func, args=('Sample2',))
+    
+    process.start()
+    process2.start()
+    
+    process.join()
+    process2.join()
+
+# if __name__ == '__main__':
+#     main()
+
+# # POOLS (MAP) Codigo para mostrar como funciona el multiprocessing con los cores. 
+import multiprocessing as mp
+from time_stuff import get_time, kill_time
+import time
+
+def convert_to_x(number: int) -> str:
+    time.sleep(2)
+    return number * 'x'
+
+@get_time
+def main():
+    print(f'Cores avaliable: {mp.cpu_count()}')
+    
+    values: tuple[int, ...] = tuple(range(1, 10))
+    
+    # Solo tomará 4 cores, hasta que no se liberen no seguirá con el resto
+    with mp.Pool(processes=4) as pool:
+        results: list[str] = pool.map(convert_to_x, values)
+        print('Results:', results)
+
+# if __name__ == '__main__':
+#     main()
+
+# # POOLS (STARMAP) Se usa para pasar multiples argumentos en las funciones
+import multiprocessing as mp
+from time_stuff import get_time
+import time
+
+def add_numbers(*args) -> float:
+    time.sleep(2)
+    return(sum(args))
+
+@get_time
+def main():
+    print(f'Cores avaliable: {mp.cpu_count()}')
+    
+    values = ((1,2,10), (3,4), (5,6), (7,8,111))
+    
+    with mp.Pool() as pool:
+        results: list[float] = pool.starmap(add_numbers, values)
+        print('Results:', results)
+
+if __name__ == '__main__':
+    main()
