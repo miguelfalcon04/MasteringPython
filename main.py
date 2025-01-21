@@ -1444,70 +1444,172 @@
 # # # # # # # SECTION 17 MULTIPROCESSING # # # # # # # 
 
 # # PROCESSES
-import multiprocessing as mp
-from time_stuff import get_time, timestamp, kill_time
-import os
+# import multiprocessing as mp
+# from time_stuff import get_time, timestamp, kill_time
+# import os
 
-def func(param):
-    print(f'Starting {mp.current_process().name} ({os.getpid()})... ({timestamp()})')
-    kill_time()
-    print(f'{os.getpid()} finished ({timestamp()})')
+# def func(param):
+#     print(f'Starting {mp.current_process().name} ({os.getpid()})... ({timestamp()})')
+#     kill_time()
+#     print(f'{os.getpid()} finished ({timestamp()})')
 
-@get_time
-def main():
-    process = mp.Process(name='Process-1', target=func, args=('Sample',))
-    process2 = mp.Process(name='Process-2', target=func, args=('Sample2',))
+# @get_time
+# def main():
+#     process = mp.Process(name='Process-1', target=func, args=('Sample',))
+#     process2 = mp.Process(name='Process-2', target=func, args=('Sample2',))
     
-    process.start()
-    process2.start()
+#     process.start()
+#     process2.start()
     
-    process.join()
-    process2.join()
+#     process.join()
+#     process2.join()
 
 # if __name__ == '__main__':
 #     main()
 
 # # POOLS (MAP) Codigo para mostrar como funciona el multiprocessing con los cores. 
-import multiprocessing as mp
-from time_stuff import get_time, kill_time
-import time
+# import multiprocessing as mp
+# from time_stuff import get_time, kill_time
+# import time
 
-def convert_to_x(number: int) -> str:
-    time.sleep(2)
-    return number * 'x'
+# def convert_to_x(number: int) -> str:
+#     time.sleep(2)
+#     return number * 'x'
 
-@get_time
-def main():
-    print(f'Cores avaliable: {mp.cpu_count()}')
+# @get_time
+# def main():
+#     print(f'Cores avaliable: {mp.cpu_count()}')
     
-    values: tuple[int, ...] = tuple(range(1, 10))
+#     values: tuple[int, ...] = tuple(range(1, 10))
     
-    # Solo tomará 4 cores, hasta que no se liberen no seguirá con el resto
-    with mp.Pool(processes=4) as pool:
-        results: list[str] = pool.map(convert_to_x, values)
-        print('Results:', results)
+#     # Solo tomará 4 cores, hasta que no se liberen no seguirá con el resto
+#     with mp.Pool(processes=4) as pool:
+#         results: list[str] = pool.map(convert_to_x, values)
+#         print('Results:', results)
 
 # if __name__ == '__main__':
 #     main()
 
 # # POOLS (STARMAP) Se usa para pasar multiples argumentos en las funciones
+# import multiprocessing as mp
+# from time_stuff import get_time
+# import time
+
+# def add_numbers(*args) -> float:
+#     time.sleep(2)
+#     return(sum(args))
+
+# @get_time
+# def main():
+#     print(f'Cores avaliable: {mp.cpu_count()}')
+    
+#     values = ((1,2,10), (3,4), (5,6), (7,8,111))
+    
+#     with mp.Pool() as pool:
+#         results: list[float] = pool.starmap(add_numbers, values)
+#         print('Results:', results)
+
+# if __name__ == '__main__':
+#     main()
+
+# # POOLS (MULTIPLE FUNCTIONS)
 import multiprocessing as mp
 from time_stuff import get_time
+import functools
 import time
 
-def add_numbers(*args) -> float:
+def func_a(param):
     time.sleep(2)
-    return(sum(args))
+    return param
+
+def func_b(param):
+    time.sleep(2)
+    return param
+
+def func_c(param, param2):
+    time.sleep(2)
+    return param, param2
+
+def map_func(func):
+    return func()
 
 @get_time
 def main():
     print(f'Cores avaliable: {mp.cpu_count()}')
     
-    values = ((1,2,10), (3,4), (5,6), (7,8,111))
+    a = functools.partial(func_a, 'A')
+    b = functools.partial(func_b, 'B')
+    c = functools.partial(func_c, 'C', 'C2')
     
     with mp.Pool() as pool:
-        results: list[float] = pool.starmap(add_numbers, values)
-        print('Results:', results)
+        results = pool.map(map_func, [a, b, c])
+        print(results)
+
+
+# if __name__ == '__main__':
+#     main()
+
+
+# # DATA SHARING ISSUE // While multiprocessing each core has its own copy of data so will be conflicts at the return
+from multiprocessing import Process
+
+numbers: list[int] = [0]
+
+def func():
+    global numbers
+    
+    numbers.extend([1, 2, 3])
+    print(f'Process data: {numbers}')
+
+def main():
+    process = Process(target=func)
+    process.start()
+    process.join()
+    print('Main data:', numbers)
+
+# if __name__ == '__main__':
+#     main()
+
+# PIPES 
+from multiprocessing import Pipe, Process, current_process
+from random import randint
+import os
+import time
+
+def sender(connection):
+    print(f'Sender: {current_process().name} ({os.getpid()})...')
+    
+    for _ in range(5):
+        rand: int = randint(1, 10)
+        connection.send(rand)
+        print(f'{rand} was sent...')
+        time.sleep(0.5)
+    print('Sending "None"...')
+    connection.send(None)
+    print('Done with sending data')
+
+def reciver(connection):
+    print(f'Reciever: {current_process().name} ({os.getpid()})...')
+    
+    while True:
+        data = connection.recv()
+        print(f'{data} was recieved...')
+        
+        if data is None:
+            break
+    print('Done with recieving data')
+
+def main():
+    c1, c2 = Pipe()
+    
+    sender_process = Process(target=sender, args=(c2,))
+    receiver_process = Process(target=reciver, args=(c1,))
+    
+    sender_process.start()
+    receiver_process.start()
+    
+    sender_process.join()
+    receiver_process.join()
 
 if __name__ == '__main__':
     main()
