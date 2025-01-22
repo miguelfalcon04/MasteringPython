@@ -1513,37 +1513,37 @@
 #     main()
 
 # # POOLS (MULTIPLE FUNCTIONS)
-import multiprocessing as mp
-from time_stuff import get_time
-import functools
-import time
+# import multiprocessing as mp
+# from time_stuff import get_time
+# import functools
+# import time
 
-def func_a(param):
-    time.sleep(2)
-    return param
+# def func_a(param):
+#     time.sleep(2)
+#     return param
 
-def func_b(param):
-    time.sleep(2)
-    return param
+# def func_b(param):
+#     time.sleep(2)
+#     return param
 
-def func_c(param, param2):
-    time.sleep(2)
-    return param, param2
+# def func_c(param, param2):
+#     time.sleep(2)
+#     return param, param2
 
-def map_func(func):
-    return func()
+# def map_func(func):
+#     return func()
 
-@get_time
-def main():
-    print(f'Cores avaliable: {mp.cpu_count()}')
+# @get_time
+# def main():
+#     print(f'Cores avaliable: {mp.cpu_count()}')
     
-    a = functools.partial(func_a, 'A')
-    b = functools.partial(func_b, 'B')
-    c = functools.partial(func_c, 'C', 'C2')
+#     a = functools.partial(func_a, 'A')
+#     b = functools.partial(func_b, 'B')
+#     c = functools.partial(func_c, 'C', 'C2')
     
-    with mp.Pool() as pool:
-        results = pool.map(map_func, [a, b, c])
-        print(results)
+#     with mp.Pool() as pool:
+#         results = pool.map(map_func, [a, b, c])
+#         print(results)
 
 
 # if __name__ == '__main__':
@@ -1551,65 +1551,164 @@ def main():
 
 
 # # DATA SHARING ISSUE // While multiprocessing each core has its own copy of data so will be conflicts at the return
-from multiprocessing import Process
+# from multiprocessing import Process
 
-numbers: list[int] = [0]
+# numbers: list[int] = [0]
 
-def func():
-    global numbers
+# def func():
+#     global numbers
     
-    numbers.extend([1, 2, 3])
-    print(f'Process data: {numbers}')
+#     numbers.extend([1, 2, 3])
+#     print(f'Process data: {numbers}')
 
-def main():
-    process = Process(target=func)
-    process.start()
-    process.join()
-    print('Main data:', numbers)
+# def main():
+#     process = Process(target=func)
+#     process.start()
+#     process.join()
+#     print('Main data:', numbers)
 
 # if __name__ == '__main__':
 #     main()
 
-# PIPES 
-from multiprocessing import Pipe, Process, current_process
-from random import randint
-import os
+# # PIPES 
+# from multiprocessing import Pipe, Process, current_process
+# from random import randint
+# import os
+# import time
+
+# def sender(connection):
+#     print(f'Sender: {current_process().name} ({os.getpid()})...')
+    
+#     for _ in range(5):
+#         rand: int = randint(1, 10)
+#         connection.send(rand)
+#         print(f'{rand} was sent...')
+#         time.sleep(0.5)
+#     print('Sending "None"...')
+#     connection.send(None)
+#     print('Done with sending data')
+
+# def reciver(connection):
+#     print(f'Reciever: {current_process().name} ({os.getpid()})...')
+    
+#     while True:
+#         data = connection.recv()
+#         print(f'{data} was recieved...')
+        
+#         if data is None:
+#             break
+#     print('Done with recieving data')
+
+# def main():
+#     c1, c2 = Pipe()
+    
+#     sender_process = Process(target=sender, args=(c2,))
+#     receiver_process = Process(target=reciver, args=(c1,))
+    
+#     sender_process.start()
+#     receiver_process.start()
+    
+#     sender_process.join()
+#     receiver_process.join()
+
+# if __name__ == '__main__':
+#     main()
+
+
+# # QUEUES
+from multiprocessing import Process, Queue, current_process
 import time
 
-def sender(connection):
-    print(f'Sender: {current_process().name} ({os.getpid()})...')
-    
-    for _ in range(5):
-        rand: int = randint(1, 10)
-        connection.send(rand)
-        print(f'{rand} was sent...')
-        time.sleep(0.5)
-    print('Sending "None"...')
-    connection.send(None)
-    print('Done with sending data')
+def insert_val(queue: Queue, i: int):
+    print(f'{i} was put in the queue...')
+    queue.put(i)
 
-def reciver(connection):
-    print(f'Reciever: {current_process().name} ({os.getpid()})...')
+def func(queue: Queue):
+    name: str = current_process().name
     
-    while True:
-        data = connection.recv()
-        print(f'{data} was recieved...')
-        
-        if data is None:
-            break
-    print('Done with recieving data')
+    try:
+        print(f'{name} received data: {queue.get(timeout=3)}')
+    except Exception as e:
+        print('Timeout!', e)
+
+def square_number(identifier: int, num: int, queue: Queue):
+    time.sleep(2)
+    queue.put((identifier, num ** 2))
 
 def main():
-    c1, c2 = Pipe()
+    queue: Queue = Queue()
+    data: list[int] = list(range(1, 9))
     
-    sender_process = Process(target=sender, args=(c2,))
-    receiver_process = Process(target=reciver, args=(c1,))
+    processes = [Process(target=square_number, args=(identifier, num, queue))
+                for identifier, num in enumerate(data)]
     
-    sender_process.start()
-    receiver_process.start()
+    for process in processes:
+        process.start()
     
-    sender_process.join()
-    receiver_process.join()
+    for process in processes:
+        process.join()
+    
+    unsorted = [queue.get() for _ in processes]
+    print(unsorted)
+    
+    result = [val[1] for val in sorted(unsorted)]
+    print(result)
+
+
+# def main():
+#     queue: Queue = Queue()
+#     queue.put(1)
+#     # queue.put(2)
+#     queue.put(3)
+#     # queue.put(4)
+    
+#     processes = [Process(target=func, args=(queue,)) for _ in range(4)]
+    
+#     for process in processes:
+#         process.start()
+    
+#     for process in processes:
+#         process.join()
+
+
+# def main():
+#     queue: Queue = Queue()
+    
+#     processes = [Process(target=insert_val, args=(queue, i)) for i in range(5)]
+    
+#     for process in processes:
+#         process.start()
+    
+#     for process in processes:
+#         process.join()
+    
+#     results = [queue.get() for _ in processes]
+#     print(results)
+
+# if __name__ == '__main__':
+#     main()
+
+# # LOCKS & SEMAPHORES
+from time import sleep
+from multiprocessing import Process, Lock, Semaphore
+
+def func(p_lock, identifier):
+    
+    with p_lock:
+        sleep(1)
+        print(f'>> Process {identifier} is running')
+
+def main():
+    lock = Lock()
+    sem = Semaphore(3)
+    
+    processes = [Process(target=func, args=(lock, i)) for i in range(5)]
+    
+    for process in processes:
+        process.start()
+    
+    for process in processes:
+        process.join()
 
 if __name__ == '__main__':
     main()
