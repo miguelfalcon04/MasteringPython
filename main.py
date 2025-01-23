@@ -1616,43 +1616,43 @@
 
 
 # # QUEUES
-from multiprocessing import Process, Queue, current_process
-import time
+# from multiprocessing import Process, Queue, current_process
+# import time
 
-def insert_val(queue: Queue, i: int):
-    print(f'{i} was put in the queue...')
-    queue.put(i)
+# def insert_val(queue: Queue, i: int):
+#     print(f'{i} was put in the queue...')
+#     queue.put(i)
 
-def func(queue: Queue):
-    name: str = current_process().name
+# def func(queue: Queue):
+#     name: str = current_process().name
     
-    try:
-        print(f'{name} received data: {queue.get(timeout=3)}')
-    except Exception as e:
-        print('Timeout!', e)
+#     try:
+#         print(f'{name} received data: {queue.get(timeout=3)}')
+#     except Exception as e:
+#         print('Timeout!', e)
 
-def square_number(identifier: int, num: int, queue: Queue):
-    time.sleep(2)
-    queue.put((identifier, num ** 2))
+# def square_number(identifier: int, num: int, queue: Queue):
+#     time.sleep(2)
+#     queue.put((identifier, num ** 2))
 
-def main():
-    queue: Queue = Queue()
-    data: list[int] = list(range(1, 9))
+# def main():
+#     queue: Queue = Queue()
+#     data: list[int] = list(range(1, 9))
     
-    processes = [Process(target=square_number, args=(identifier, num, queue))
-                for identifier, num in enumerate(data)]
+#     processes = [Process(target=square_number, args=(identifier, num, queue))
+#                 for identifier, num in enumerate(data)]
     
-    for process in processes:
-        process.start()
+#     for process in processes:
+#         process.start()
     
-    for process in processes:
-        process.join()
+#     for process in processes:
+#         process.join()
     
-    unsorted = [queue.get() for _ in processes]
-    print(unsorted)
+#     unsorted = [queue.get() for _ in processes]
+#     print(unsorted)
     
-    result = [val[1] for val in sorted(unsorted)]
-    print(result)
+#     result = [val[1] for val in sorted(unsorted)]
+#     print(result)
 
 
 # def main():
@@ -1689,26 +1689,87 @@ def main():
 #     main()
 
 # # LOCKS & SEMAPHORES
-from time import sleep
-from multiprocessing import Process, Lock, Semaphore
+# from time import sleep
+# from multiprocessing import Process, Lock, Semaphore
 
-def func(p_lock, identifier):
+# def func(p_lock, identifier):
     
-    with p_lock:
-        sleep(1)
-        print(f'>> Process {identifier} is running')
+#     with p_lock:
+#         sleep(1)
+#         print(f'>> Process {identifier} is running')
+
+# def main():
+#     lock = Lock()
+#     sem = Semaphore(3)
+    
+#     processes = [Process(target=func, args=(lock, i)) for i in range(5)]
+    
+#     for process in processes:
+#         process.start()
+    
+#     for process in processes:
+#         process.join()
+
+# if __name__ == '__main__':
+#     main()
+
+# # # # # # # SECTION 19 Projects # # # # # # # 
+
+import time
+from dataclasses import dataclass
+from random import choice, shuffle
+
+@dataclass(slots=True)
+class Question:
+    question: str
+    answers: list[str]
+    correct_answer: str
+
+def random_question(questions: list[Question]) -> int:
+    question: Question = choice(questions)
+    print(f'{question.question}')
+    
+    shuffle(question.answers)
+    
+    for answer in question.answers:
+        print('-', answer)
+    
+    user_input: str = input('\nYour answer >> ').lower().strip()
+    
+    if user_input == question.correct_answer:
+        print('Correct\n')
+        questions.remove(question)
+        return 1
+    else:
+        print(f'Wrong, the answer was: {question.correct_answer.capitalize()}\n')
+        questions.remove(question)
+        return 0
+
+def run_quiz(questions: list[Question]):
+    total_score: int = 0
+    while questions:
+        score: int = random_question(questions=questions)
+        total_score += score
+        time.sleep(2)
+    else:
+        print('Final score:', total_score)
+
+def get_questions() -> list[Question]:
+    return [
+        Question(question='How are you?',
+                answers=['Good', 'Bad', 'Ok', 'Potato'],
+                correct_answer='good'),
+        Question(question='What is your name?',
+                answers=['Mario', 'Luigi', 'Peach', 'Miguel'],
+                correct_answer='miguel'),
+        Question(question='What time is it?',
+                answers=['10', '11', '12', '13s'],
+                correct_answer='10'),
+    ]
 
 def main():
-    lock = Lock()
-    sem = Semaphore(3)
-    
-    processes = [Process(target=func, args=(lock, i)) for i in range(5)]
-    
-    for process in processes:
-        process.start()
-    
-    for process in processes:
-        process.join()
+    questions: list[Question] = get_questions()
+    run_quiz(questions=questions)
 
 if __name__ == '__main__':
     main()
