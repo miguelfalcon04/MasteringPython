@@ -1715,61 +1715,108 @@
 
 # # # # # # # SECTION 19 Projects # # # # # # # 
 
-import time
-from dataclasses import dataclass
-from random import choice, shuffle
 
-@dataclass(slots=True)
-class Question:
-    question: str
-    answers: list[str]
-    correct_answer: str
 
-def random_question(questions: list[Question]) -> int:
-    question: Question = choice(questions)
-    print(f'{question.question}')
+# # # # # # # IMPOSSIBLE QUIZ # # # # # # # 
+# import time
+# from dataclasses import dataclass
+# from random import choice, shuffle
+
+# @dataclass(slots=True)
+# class Question:
+#     question: str
+#     answers: list[str]
+#     correct_answer: str
+
+# def random_question(questions: list[Question]) -> int:
+#     question: Question = choice(questions)
+#     print(f'{question.question}')
     
-    shuffle(question.answers)
+#     shuffle(question.answers)
     
-    for answer in question.answers:
-        print('-', answer)
+#     for answer in question.answers:
+#         print('-', answer)
     
-    user_input: str = input('\nYour answer >> ').lower().strip()
+#     user_input: str = input('\nYour answer >> ').lower().strip()
     
-    if user_input == question.correct_answer:
-        print('Correct\n')
-        questions.remove(question)
-        return 1
+#     if user_input == question.correct_answer:
+#         print('Correct\n')
+#         questions.remove(question)
+#         return 1
+#     else:
+#         print(f'Wrong, the answer was: {question.correct_answer.capitalize()}\n')
+#         questions.remove(question)
+#         return 0
+
+# def run_quiz(questions: list[Question]):
+#     total_score: int = 0
+#     while questions:
+#         score: int = random_question(questions=questions)
+#         total_score += score
+#         time.sleep(2)
+#     else:
+#         print('Final score:', total_score)
+
+# def get_questions() -> list[Question]:
+#     return [
+#         Question(question='How are you?',
+#                 answers=['Good', 'Bad', 'Ok', 'Potato'],
+#                 correct_answer='good'),
+#         Question(question='What is your name?',
+#                 answers=['Mario', 'Luigi', 'Peach', 'Miguel'],
+#                 correct_answer='miguel'),
+#         Question(question='What time is it?',
+#                 answers=['10', '11', '12', '13s'],
+#                 correct_answer='10'),
+#     ]
+
+# def main():
+#     questions: list[Question] = get_questions()
+#     run_quiz(questions=questions)
+
+# if __name__ == '__main__':
+#     main()
+
+# # # # # # # MY OWN API # # # # # # # 
+
+from flask import Flask, request
+from collections import namedtuple
+from datetime import date
+from time import time
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return {'Test': 'This is an example',
+            'Time': date.today(),
+            'Timestamp': time()}
+
+@app.route('/chat')
+def chat():
+    user_input: str = request.args.get('input')
+    response: Response = generate_responses(user_input)
+    
+    json = {
+        'input': user_input,
+        'response': response.response,
+        'accuracy': response.accuracy
+    }
+    
+    return json
+
+Response = namedtuple('Response', 'response accuracy')
+
+def generate_responses(user_input: str) -> Response :
+    lc_input: str = user_input.lower()
+    
+    if lc_input == 'hello':
+        return Response('Hey there', 1)
+    elif lc_input == 'goodbye':
+        return Response('See you later', 1)
     else:
-        print(f'Wrong, the answer was: {question.correct_answer.capitalize()}\n')
-        questions.remove(question)
-        return 0
-
-def run_quiz(questions: list[Question]):
-    total_score: int = 0
-    while questions:
-        score: int = random_question(questions=questions)
-        total_score += score
-        time.sleep(2)
-    else:
-        print('Final score:', total_score)
-
-def get_questions() -> list[Question]:
-    return [
-        Question(question='How are you?',
-                answers=['Good', 'Bad', 'Ok', 'Potato'],
-                correct_answer='good'),
-        Question(question='What is your name?',
-                answers=['Mario', 'Luigi', 'Peach', 'Miguel'],
-                correct_answer='miguel'),
-        Question(question='What time is it?',
-                answers=['10', '11', '12', '13s'],
-                correct_answer='10'),
-    ]
-
-def main():
-    questions: list[Question] = get_questions()
-    run_quiz(questions=questions)
+        return Response('Could not understand', 0)
+    
 
 if __name__ == '__main__':
-    main()
+    app.run()
