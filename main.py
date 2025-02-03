@@ -1779,44 +1779,98 @@
 
 # # # # # # # MY OWN API # # # # # # # 
 
-from flask import Flask, request
-from collections import namedtuple
-from datetime import date
-from time import time
+# from flask import Flask, request
+# from collections import namedtuple
+# from datetime import date
+# from time import time
 
-app = Flask(__name__)
+# app = Flask(__name__)
 
-@app.route('/')
-def index():
-    return {'Test': 'This is an example',
-            'Time': date.today(),
-            'Timestamp': time()}
+# @app.route('/')
+# def index():
+#     return {'Test': 'This is an example',
+#             'Time': date.today(),
+#             'Timestamp': time()}
 
-@app.route('/chat')
-def chat():
-    user_input: str = request.args.get('input')
-    response: Response = generate_responses(user_input)
+# @app.route('/chat')
+# def chat():
+#     user_input: str = request.args.get('input')
+#     response: Response = generate_responses(user_input)
     
-    json = {
-        'input': user_input,
-        'response': response.response,
-        'accuracy': response.accuracy
-    }
+#     json = {
+#         'input': user_input,
+#         'response': response.response,
+#         'accuracy': response.accuracy
+#     }
     
-    return json
+#     return json
 
-Response = namedtuple('Response', 'response accuracy')
+# Response = namedtuple('Response', 'response accuracy')
 
-def generate_responses(user_input: str) -> Response :
-    lc_input: str = user_input.lower()
+# def generate_responses(user_input: str) -> Response :
+#     lc_input: str = user_input.lower()
     
-    if lc_input == 'hello':
-        return Response('Hey there', 1)
-    elif lc_input == 'goodbye':
-        return Response('See you later', 1)
-    else:
-        return Response('Could not understand', 0)
+#     if lc_input == 'hello':
+#         return Response('Hey there', 1)
+#     elif lc_input == 'goodbye':
+#         return Response('See you later', 1)
+#     else:
+#         return Response('Could not understand', 0)
     
+
+# if __name__ == '__main__':
+#     app.run()
+
+# # # # # # # ACCURATE CHAT BOT # # # # # # # 
+
+import json
+import re
+import random_responses
+
+def load_json(file):
+    with open(file) as bot_responses:
+        print(f'Loaded "{file}" succesfully!')
+        return json.load(bot_responses)
+    
+
+response_data: dict = load_json('responses.json')
+
+def get_response(input_str: str):
+    split_message: list[str] = re.split(r'\s+|[,;?!.-]\s*', input_str.lower())
+    score_list: list[int] = []
+    
+    for response in response_data:
+        required_score: int = 0
+        response_score: int = 0
+        required_words: list[str] = response['required_words']
+        
+        if required_words:
+            for word in split_message:
+                if word in required_words:
+                    required_score += 1
+        
+        if required_score == len(required_words):
+            for word in split_message:
+                if word in response['user_input']:
+                    response_score += 1
+            
+        score_list.append(response_score)
+    
+    best_response: int = max(score_list)
+    response_index: int = score_list.index(best_response)
+    
+    if input_str == "":
+        return "Please type somethin"
+    
+    if best_response != 0:
+        return response_data[response_index]['bot_response']
+    
+    return random_responses.get_random_response()
+
+def main():
+    while True:
+        user_input: str = input('You: ')
+        print('Bot:', get_response(user_input))
 
 if __name__ == '__main__':
-    app.run()
+    main()
