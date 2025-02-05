@@ -1880,76 +1880,212 @@
 
 # # # # # # # F-Strings are powerful # # # # # # #
 
-text: str = 'SAMPLE'
-print(f'{text:20}: hello')
-print(f'{text:<20}: hello')
-print(f'{text:>20}: hello')
-print(f'{text:^20}: hello')
+# text: str = 'SAMPLE'
+# print(f'{text:20}: hello')
+# print(f'{text:<20}: hello')
+# print(f'{text:>20}: hello')
+# print(f'{text:^20}: hello')
 
-print(f'{text:_<20}: hello')
-print(f'{text:_>20}: hello')
-print(f'{text:_^20}: hello')
+# print(f'{text:_<20}: hello')
+# print(f'{text:_>20}: hello')
+# print(f'{text:_^20}: hello')
 
-number:float = 10_000.123456
-print(f'{number:.2f}')
-print(f'{number:,.2f}')
+# number:float = 10_000.123456
+# print(f'{number:.2f}')
+# print(f'{number:,.2f}')
 
-number2: int = 1_000_000
-print(f'{number2:.0e}')
+# number2: int = 1_000_000
+# print(f'{number2:.0e}')
 
-# # # # # # # Tuples & Type Hinting # # # # # # #
+# # # # # # # # Tuples & Type Hinting # # # # # # #
 
-numbers: tuple[int | str, ...] = (12, 'hello', 1234)
+# numbers: tuple[int | str, ...] = (12, 'hello', 1234)
 
-# # # # # # # Flattening Lists # # # # # # #
-from typing import Iterable
+# # # # # # # # Flattening Lists # # # # # # #
+# from typing import Iterable
 
-people: list = [['Mario', 'Luigi'], ['James', 'Bob']]
-new_list: list[str] = []
-for names in people:
-    for name in names:
-        new_list.append(name)
+# people: list = [['Mario', 'Luigi'], ['James', 'Bob']]
+# new_list: list[str] = []
+# for names in people:
+#     for name in names:
+#         new_list.append(name)
 
-new_list2: list[str] = [name
-                        for names in people
-                        for name in names]
+# new_list2: list[str] = [name
+#                         for names in people
+#                         for name in names]
 
 
-def flatten(iterable: Iterable) -> list:
-    l: list = []
-    for item in iterable:
-        if isinstance(item, Iterable) and not isinstance(item, str):
-            l.extend(flatten(item))
-        else:
-            l.append(item)
-    return l
+# def flatten(iterable: Iterable) -> list:
+#     l: list = []
+#     for item in iterable:
+#         if isinstance(item, Iterable) and not isinstance(item, str):
+#             l.extend(flatten(item))
+#         else:
+#             l.append(item)
+#     return l
 
-print(new_list)
-print(new_list2)
-print(flatten(people))
+# print(new_list)
+# print(new_list2)
+# print(flatten(people))
 
-# # # # # # # Elipses # # # # # # #
-print(...)
+# # # # # # # # Elipses # # # # # # #
+# print(...)
 
-# # # # # # # Linting # # # # # # #
-# pylint main.py in console
+# # # # # # # # Linting # # # # # # #
+# # pylint main.py in console
 
-def do_something():
-    print('Hello world')
+# def do_something():
+#     print('Hello world')
 
-class Fruit:
-    def __init__(self):
-        print('I am a fruit')
+# class Fruit:
+#     def __init__(self):
+#         print('I am a fruit')
     
-    def explode(self):
-        pass
+#     def explode(self):
+#         pass
 
-fruit: Fruit = Fruit()
-do_something()
+# fruit: Fruit = Fruit()
+# do_something()
 
 
-# # # # # # # #noqa # # # # # # #
-import math, random # NOQA
+# # # # # # # # #noqa # # # # # # #
+# import math, random # NOQA
 
-math.sqrt(10)
-random.random()
+# math.sqrt(10)
+# random.random()
+
+# # # # # # # # Concatenating Strings # # # # # # #
+
+import timeit
+
+def string_concat_raw():
+    string: str = 'string'
+    
+    for i in range(10):
+        string += 'string'
+    
+    return string
+
+def strings_concat_list():
+    string: str = 'string'
+    string_list: list[str] = [string]
+    
+    for i in range(10):
+        string_list.append(string)
+    
+    return ''.join(string_list)
+
+# if __name__ == '__main__':
+#     time_concat: float = timeit.timeit(stmt=string_concat_raw, number= 1000)
+#     time_join: float = timeit.timeit(stmt=strings_concat_list, number= 1000)
+    
+#     print('String concatenation:', time_concat)
+#     print('List join:', time_join)
+
+# # # # # # # # Underscores # # # # # # #
+
+values = (1, 2, 3, 4, 5)
+a, _ , _ , _ , e = values
+
+print(a, e, _)
+
+for _ in range(2):
+    print('Hello')
+
+number: int = 10_000_000
+
+class_ = 'text' 
+
+# # # # # # # # Lists VS Arrays # # # # # # #
+from array import array
+
+arr = array('i', range(10))
+l = list(range(10))
+
+print(arr)
+print(l)
+
+# # # # # # # # IIFE In Python # # # # # # #
+from datetime import datetime
+
+@lambda _: _()
+def script_start_time() -> str:
+    current_time: str = f'{datetime.now():%H:%M:%S}'
+    print(current_time)
+    return(current_time)
+
+
+# # # # # # # SECTION 22 NEW IN PYTHON 3.11 # # # # # # # 
+
+# # # # # # # # Exception Groups # # # # # # #
+
+exs = ExceptionGroup("Custom exeception message",
+                    [
+                        FileNotFoundError('File does not exist'),
+                        KeyError("No user found")
+                    ])
+
+try:
+    raise exs
+except ExceptionGroup as eg:
+    print(eg.exceptions)
+
+
+# # # # # # # # Tasks Groups # # # # # # #
+import asyncio
+
+async def read_file(filename: str) -> str:
+    with open(filename) as f:
+        data: str = f.read()
+    return data
+
+async def fetch_data(data: int) -> dict:
+    print('Fetching data...')
+    await asyncio.sleep(data)
+    
+    if data == 0:
+        raise Exception('No data...')
+    
+    return {'data': data}
+
+# async def main():
+#     tasks = asyncio.gather(
+#         fetch_data(1),
+#         fetch_data(2),
+#         fetch_data(0),
+#         return_exceptions=True
+#     )
+    
+#     values = await tasks
+#     print(values)
+
+# async def main():
+#     try:
+#         async with asyncio.TaskGroup() as tg:
+#             tg.create_task(fetch_data(1))
+#             tg.create_task(fetch_data(2))
+#             tg.create_task(read_file('123.png'))
+#             tg.create_task(fetch_data(0))
+#         print('TaskGroup Finished')
+    
+#     except ExceptionGroup as eg:
+#         print(eg.exceptions)
+
+# asyncio.run(main())
+
+# # # # # # # # "Self" type # # # # # # #
+from typing import Self
+
+class Shape:
+    def set_scale(self, scale: float) -> Self:
+        self.scale = scale
+        return self
+
+Shape().set_scale(0.5)
+
+class Circle(Shape):
+    def set_radius(self, r: float):
+        self.radius = r
+        return self
+
+Circle().set_radius(10).set_scale(0.5)
